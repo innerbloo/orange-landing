@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜딩페이지</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>랜딩페이지 타이틀</h1>
+            <p class="subtitle">서브 타이틀 텍스트 (디자인 시안 대기 중)</p>
+        </header>
+
+        <section class="form-section">
+            <form id="landing-form" class="landing-form">
+                <div class="form-group">
+                    <label for="name">이름 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required placeholder="이름을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">연락처 <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" required placeholder="010-0000-0000">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" name="email" placeholder="email@example.com">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                        <span>개인정보 수집 및 이용에 동의합니다. <span class="required">*</span></span>
+                    </label>
+                </div>
+
+                <button type="submit" id="submit-btn" class="submit-btn">
+                    <span class="btn-text">신청하기</span>
+                    <span class="btn-loading" hidden>처리 중...</span>
+                </button>
+            </form>
+
+            <div id="form-message" class="form-message" hidden></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
