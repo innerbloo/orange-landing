@@ -1,5 +1,5 @@
-// Google Apps Script 웹앱 URL (배포 후 실제 URL로 교체)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpoEk_WXzKvrc1cVsqIRckqY-zKF7PZipHhsvhmVvCqabWksQqsePJ-ebwEG6K1ZpS/exec';
+// Cloudflare Worker API URL (배포 후 실제 URL로 교체)
+const API_URL = 'https://landing-api.innerbloo.workers.dev/api/submit';
 
 // DOM 요소
 const form = document.getElementById('landing-form');
@@ -17,6 +17,7 @@ form.addEventListener('submit', async (e) => {
 
     // 폼 데이터 수집
     const formData = {
+        project: '응답',  // 랜딩별 시트 탭 이름 (새 랜딩 추가 시 이 값만 변경)
         name: document.getElementById('name').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         email: document.getElementById('email').value.trim(),
@@ -32,19 +33,22 @@ form.addEventListener('submit', async (e) => {
     hideMessage();
 
     try {
-        const response = await fetch(APPS_SCRIPT_URL, {
+        const response = await fetch(API_URL, {
             method: 'POST',
-            mode: 'no-cors', // Apps Script CORS 우회
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData)
         });
 
-        // no-cors 모드에서는 응답 본문을 읽을 수 없음
-        // 성공으로 간주하고 처리
-        showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
-        form.reset();
+        const result = await response.json();
+
+        if (result.success) {
+            showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
+            form.reset();
+        } else {
+            showMessage(result.error || '오류가 발생했습니다.', 'error');
+        }
 
     } catch (error) {
         console.error('제출 오류:', error);

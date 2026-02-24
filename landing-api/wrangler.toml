@@ -1,0 +1,8 @@
+name = "landing-api"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+SHEET_ID = "13WjZvx0cEgGt0VEFcgyUFtdNe3j23OSY9pFO7-FPXBY"
+SHEET_NAME = "응답"
+ALLOWED_ORIGIN = "*"
