@@ -8,6 +8,15 @@ const btnText = submitBtn.querySelector('.btn-text');
 const btnLoading = submitBtn.querySelector('.btn-loading');
 const formMessage = document.getElementById('form-message');
 
+// 프로젝트명 (로컬스토리지 키로도 사용)
+const PROJECT = '오렌지플래닛';
+
+// 로컬스토리지 중복 체크 (1차 차단)
+if (localStorage.getItem(`submitted_${PROJECT}`)) {
+    submitBtn.disabled = true;
+    showMessage('이미 신청하셨습니다.', 'error');
+}
+
 // 폼 제출 처리
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -18,7 +27,7 @@ form.addEventListener('submit', async (e) => {
     // 폼 데이터 수집
     const formData = {
         // sheetId: '',     // 다른 스프레드시트 사용 시 시트 ID 입력
-        project: '오렌지플래닛',  // 탭 이름 (새 랜딩 추가 시 변경)
+        project: PROJECT,  // 탭 이름 (새 랜딩 추가 시 변경)
         fields: {
             '이름': document.getElementById('name').value.trim(),
             '연락처': document.getElementById('phone').value.trim(),
@@ -46,8 +55,10 @@ form.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (result.success) {
+            localStorage.setItem(`submitted_${PROJECT}`, 'true');
             showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
             form.reset();
+            submitBtn.disabled = true;
         } else {
             showMessage(result.error || '오류가 발생했습니다.', 'error');
         }

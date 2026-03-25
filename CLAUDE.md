@@ -26,8 +26,6 @@ landing/
 │   │   └── buzzvil-client.js   ← 버즈빌 연동 (미사용)
 │   ├── schema.sql              ← D1 테이블 스키마
 │   └── wrangler.toml           ← Worker 설정 (D1, SHEET_ID, 라우트)
-└── apps-script/
-    └── Code.gs                 ← 이전 Apps Script (레거시, 미사용)
 ```
 
 ## 아키텍처
