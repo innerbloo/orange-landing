@@ -15,4 +15,3 @@ database_id = "7a9087b0-554c-4678-a5a9-a5d60c3fe20e"
 [vars]
 SHEET_ID = "11MKLOt1BwPG-cXKohjaCTZdgda3aw85Z6irEiFufxdw"
 SHEET_NAME = "오렌지플래닛"
-ALLOWED_ORIGIN = "*"

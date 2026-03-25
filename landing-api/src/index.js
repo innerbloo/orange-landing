@@ -1,41 +1,84 @@
 /**
  * Cloudflare Worker — 랜딩페이지 폼 백엔드
- * Apps Script(Code.gs) 대체
  */
 
 import { getAccessToken } from './google-auth.js';
 import { appendToSheet } from './sheets-client.js';
-import { isDuplicate, saveToD1 } from './d1-client.js';
-// import { callBuzzvilApi } from './buzzvil-client.js'; // 향후 활성화
+import { isDuplicate, saveToD1, logError } from './d1-client.js';
+
+// Rate Limiting: IP별 요청 횟수 (메모리 기반, 인스턴스 재시작 시 초기화)
+const rateLimitMap = new Map();
+const RATE_LIMIT = 5;          // 최대 요청 수
+const RATE_WINDOW_MS = 60000;  // 1분
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  if (!record || now - record.start > RATE_WINDOW_MS) {
+    rateLimitMap.set(ip, { start: now, count: 1 });
+    return true;
+  }
+
+  record.count++;
+  if (record.count > RATE_LIMIT) {
+    return false;
+  }
+  return true;
+}
+
+// 허용된 도메인 목록
+const ALLOWED_ORIGINS = [
+  'https://planetdb.co.kr',
+  'http://localhost',
+  'http://127.0.0.1',
+];
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.some((allowed) => origin.startsWith(allowed));
+}
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const origin = request.headers.get('Origin') || '';
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return corsResponse(env, new Response(null, { status: 204 }));
+      return corsResponse(origin, new Response(null, { status: 204 }));
     }
 
     // Router
     if (url.pathname === '/api/health' && request.method === 'GET') {
-      return corsResponse(env, jsonResponse({ status: 'ok', message: 'Worker가 정상 작동 중입니다.' }));
+      return corsResponse(origin, jsonResponse({ status: 'ok', message: 'Worker가 정상 작동 중입니다.' }));
     }
 
     if (url.pathname === '/api/submit' && request.method === 'POST') {
-      return corsResponse(env, await handleSubmit(request, env));
+      return corsResponse(origin, await handleSubmit(request, env, origin));
     }
 
-    return corsResponse(env, jsonResponse({ error: 'Not found' }, 404));
+    return corsResponse(origin, jsonResponse({ error: 'Not found' }, 404));
   },
 };
 
 /**
  * 폼 제출 처리
  */
-async function handleSubmit(request, env) {
+async function handleSubmit(request, env, origin) {
   try {
-    // 1. Body 파싱
+    // 1. CORS 검증
+    if (!isAllowedOrigin(origin)) {
+      return jsonResponse({ success: false, error: '허용되지 않은 출처입니다.' }, 403);
+    }
+
+    // 2. Rate Limiting
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return jsonResponse({ success: false, error: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.' }, 429);
+    }
+
+    // 3. Body 파싱
     let data;
     try {
       data = await request.json();
@@ -43,7 +86,7 @@ async function handleSubmit(request, env) {
       return jsonResponse({ success: false, error: '잘못된 요청 형식입니다.' }, 400);
     }
 
-    // 2. 입력 검증
+    // 4. 입력 검증
     if (!data.fields || typeof data.fields !== 'object' || Object.keys(data.fields).length === 0) {
       return jsonResponse({ success: false, error: 'fields 항목이 필요합니다.' }, 400);
     }
@@ -51,7 +94,7 @@ async function handleSubmit(request, env) {
     const project = data.project || env.SHEET_NAME;
     const phone = data.fields['연락처'] || '';
 
-    // 3. D1 중복 체크 (랜딩별)
+    // 5. D1 중복 체크 (랜딩별)
     if (phone) {
       const duplicate = await isDuplicate(env.DB, project, phone);
       if (duplicate) {
@@ -59,21 +102,29 @@ async function handleSubmit(request, env) {
       }
     }
 
-    // 4. D1 원본 저장 + 구글시트 저장
-    if (phone) {
-      await saveToD1(env.DB, project, phone, data.fields);
-    }
-
+    // 6. 구글시트 저장 (핵심 — 실패 시 에러 응답)
     const accessToken = await getAccessToken(env);
     await appendToSheet(accessToken, env, data);
 
-    // 4. 버즈빌 API 호출 (향후 주석 해제)
-    // await callBuzzvilApi(env, data);
+    // 7. D1 저장 (중복 체크용 — 실패해도 무시)
+    if (phone) {
+      try {
+        await saveToD1(env.DB, project, phone, data.fields);
+      } catch (e) {
+        console.error('D1 저장 실패 (무시):', e);
+      }
+    }
 
-    // 5. 성공 응답
+    // 8. 성공 응답
     return jsonResponse({ success: true, message: '신청이 완료되었습니다.' });
   } catch (error) {
     console.error('제출 처리 오류:', error);
+
+    // D1 에러 로깅 (실패해도 무시)
+    try {
+      await logError(env.DB, error.message, request.url);
+    } catch (_) {}
+
     return jsonResponse({ success: false, error: '저장 중 오류가 발생했습니다.' }, 500);
   }
 }
@@ -91,9 +142,10 @@ function jsonResponse(data, status = 200) {
 /**
  * CORS 헤더 추가
  */
-function corsResponse(env, response) {
+function corsResponse(origin, response) {
   const headers = new Headers(response.headers);
-  headers.set('Access-Control-Allow-Origin', env.ALLOWED_ORIGIN || '*');
+  const allowedOrigin = isAllowedOrigin(origin) ? origin : ALLOWED_ORIGINS[0];
+  headers.set('Access-Control-Allow-Origin', allowedOrigin);
   headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Content-Type');
 
