@@ -43,14 +43,8 @@ async function handleSubmit(request, env) {
     }
 
     // 2. 입력 검증
-    if (!data.name || !data.name.trim()) {
-      return jsonResponse({ success: false, error: '이름을 입력해주세요.' }, 400);
-    }
-    if (!data.phone || !data.phone.trim()) {
-      return jsonResponse({ success: false, error: '연락처를 입력해주세요.' }, 400);
-    }
-    if (!data.privacy) {
-      return jsonResponse({ success: false, error: '개인정보 수집 및 이용에 동의해주세요.' }, 400);
+    if (!data.fields || typeof data.fields !== 'object' || Object.keys(data.fields).length === 0) {
+      return jsonResponse({ success: false, error: 'fields 항목이 필요합니다.' }, 400);
     }
 
     // 3. Google Sheets API 인증 + 저장

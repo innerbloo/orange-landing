@@ -1,5 +1,5 @@
 // Cloudflare Worker API URL (배포 후 실제 URL로 교체)
-const API_URL = 'https://landing-api.innerbloo.workers.dev/api/submit';
+const API_URL = 'https://planetdb.co.kr/api/submit';
 
 // DOM 요소
 const form = document.getElementById('landing-form');
@@ -17,16 +17,18 @@ form.addEventListener('submit', async (e) => {
 
     // 폼 데이터 수집
     const formData = {
-        project: '응답',  // 랜딩별 시트 탭 이름 (새 랜딩 추가 시 이 값만 변경)
-        name: document.getElementById('name').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        privacy: document.getElementById('privacy').checked,
-        timestamp: new Date().toISOString()
+        // sheetId: '',     // 다른 스프레드시트 사용 시 시트 ID 입력
+        project: '오렌지플래닛',  // 탭 이름 (새 랜딩 추가 시 변경)
+        fields: {
+            '이름': document.getElementById('name').value.trim(),
+            '연락처': document.getElementById('phone').value.trim(),
+            '이메일': document.getElementById('email').value.trim(),
+            '개인정보동의': document.getElementById('privacy').checked ? 'Y' : 'N',
+        }
     };
 
     // 유효성 검사
-    if (!validateForm(formData)) return;
+    if (!validateForm(formData.fields)) return;
 
     // 로딩 상태 표시
     setLoadingState(true);
@@ -59,16 +61,16 @@ form.addEventListener('submit', async (e) => {
 });
 
 // 유효성 검사
-function validateForm(data) {
+function validateForm(fields) {
     // 이름 검사
-    if (!data.name) {
+    if (!fields['이름']) {
         showMessage('이름을 입력해주세요.', 'error');
         document.getElementById('name').focus();
         return false;
     }
 
     // 연락처 검사
-    if (!data.phone) {
+    if (!fields['연락처']) {
         showMessage('연락처를 입력해주세요.', 'error');
         document.getElementById('phone').focus();
         return false;
@@ -76,16 +78,16 @@ function validateForm(data) {
 
     // 연락처 형식 검사 (간단한 패턴)
     const phonePattern = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
-    if (!phonePattern.test(data.phone.replace(/-/g, ''))) {
+    if (!phonePattern.test(fields['연락처'].replace(/-/g, ''))) {
         showMessage('올바른 연락처 형식을 입력해주세요.', 'error');
         document.getElementById('phone').focus();
         return false;
     }
 
     // 이메일 형식 검사 (선택사항이지만 입력 시 검사)
-    if (data.email) {
+    if (fields['이메일']) {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(data.email)) {
+        if (!emailPattern.test(fields['이메일'])) {
             showMessage('올바른 이메일 형식을 입력해주세요.', 'error');
             document.getElementById('email').focus();
             return false;
@@ -93,7 +95,7 @@ function validateForm(data) {
     }
 
     // 개인정보 동의 검사
-    if (!data.privacy) {
+    if (fields['개인정보동의'] !== 'Y') {
         showMessage('개인정보 수집 및 이용에 동의해주세요.', 'error');
         return false;
     }

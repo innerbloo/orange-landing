@@ -1,8 +1,13 @@
 name = "landing-api"
 main = "src/index.js"
 compatibility_date = "2024-12-01"
+account_id = "3bd5bc5bc00020cde41d7070de85cb6e"
+
+routes = [
+  { pattern = "planetdb.co.kr/api/*", zone_name = "planetdb.co.kr" }
+]
 
 [vars]
-SHEET_ID = "13WjZvx0cEgGt0VEFcgyUFtdNe3j23OSY9pFO7-FPXBY"
-SHEET_NAME = "응답"
+SHEET_ID = "11MKLOt1BwPG-cXKohjaCTZdgda3aw85Z6irEiFufxdw"
+SHEET_NAME = "오렌지플래닛"
 ALLOWED_ORIGIN = "*"

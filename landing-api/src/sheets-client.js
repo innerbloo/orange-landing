@@ -1,6 +1,6 @@
 /**
  * Google Sheets API v4 클라이언트
- * 구글시트에 데이터 행 추가
+ * 구글시트에 데이터 행 추가 (동적 필드 지원)
  */
 
 const SHEETS_API_BASE = 'https://sheets.googleapis.com/v4/spreadsheets';
@@ -10,35 +10,89 @@ function formatKoreanDate(date) {
 }
 
 /**
- * 구글시트에 행 추가
- * 기존 Code.gs의 appendRow()와 동일한 컬럼 포맷 유지
+ * 시트 첫 행을 읽어서 헤더 반환. 비어있으면 헤더 생성.
  */
-export async function appendToSheet(accessToken, env, data) {
-  const sheetName = data.project || env.SHEET_NAME;
-  const url = `${SHEETS_API_BASE}/${env.SHEET_ID}/values/${encodeURIComponent(sheetName)}!A:F:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+async function ensureHeader(sheetId, sheetName, fieldKeys, headers) {
+  const range = encodeURIComponent(sheetName) + '!1:1';
+  const url = `${SHEETS_API_BASE}/${sheetId}/values/${range}`;
+  const res = await fetch(url, { headers });
 
-  const row = [
-    formatKoreanDate(new Date()),    // 제출일시
-    data.name || '',                // 이름
-    data.phone || '',               // 연락처
-    data.email || '',               // 이메일
-    data.privacy ? 'Y' : 'N',      // 개인정보동의
-    '',                             // 버즈빌응답 (향후)
-  ];
+  if (!res.ok) return null;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ values: [row] }),
-  });
+  const data = await res.json();
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`시트 저장 실패: ${response.status} ${error}`);
+  // 이미 헤더가 있으면 그대로 반환
+  if (data.values && data.values.length > 0 && data.values[0].length > 0) {
+    return data.values[0];
   }
 
-  return await response.json();
+  // 헤더 생성: 제출일시 + fields 키들
+  const header = ['제출일시', ...fieldKeys];
+  const putUrl = `${SHEETS_API_BASE}/${sheetId}/values/${encodeURIComponent(sheetName)}!A1?valueInputOption=USER_ENTERED`;
+  await fetch(putUrl, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ values: [header] }),
+  });
+
+  return header;
+}
+
+/**
+ * 구글시트에 행 추가 (동적 필드)
+ *
+ * data 구조:
+ * {
+ *   sheetId: "시트ID" (선택, 없으면 env.SHEET_ID),
+ *   project: "탭이름" (선택, 없으면 env.SHEET_NAME),
+ *   fields: { "이름": "홍길동", "연락처": "010-..." }
+ * }
+ */
+export async function appendToSheet(accessToken, env, data) {
+  const sheetId = data.sheetId || env.SHEET_ID;
+  const sheetName = data.project || env.SHEET_NAME;
+  const fields = data.fields || {};
+  const fieldKeys = Object.keys(fields);
+
+  const headers = {
+    'Authorization': `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  // 헤더 확인/생성
+  const existingHeader = await ensureHeader(sheetId, sheetName, fieldKeys, headers);
+
+  // 헤더 순서에 맞춰 row 생성
+  let row;
+  if (existingHeader) {
+    row = existingHeader.map((col) => {
+      if (col === '제출일시') return formatKoreanDate(new Date());
+      return fields[col] || '';
+    });
+  } else {
+    row = [formatKoreanDate(new Date()), ...fieldKeys.map((k) => fields[k])];
+  }
+
+  const colCount = row.length;
+  const colLetter = String.fromCharCode(64 + colCount); // 1=A, 2=B, ...
+  const body = JSON.stringify({ values: [row] });
+
+  // 지정된 탭에 저장 시도
+  const url = `${SHEETS_API_BASE}/${sheetId}/values/${encodeURIComponent(sheetName)}!A:${colLetter}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const response = await fetch(url, { method: 'POST', headers, body });
+
+  if (response.ok) {
+    return await response.json();
+  }
+
+  // 탭을 못 찾으면 첫 번째 시트에 폴백
+  const fallbackUrl = `${SHEETS_API_BASE}/${sheetId}/values/A:${colLetter}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const fallbackResponse = await fetch(fallbackUrl, { method: 'POST', headers, body });
+
+  if (!fallbackResponse.ok) {
+    const error = await fallbackResponse.text();
+    throw new Error(`시트 저장 실패: ${fallbackResponse.status} ${error}`);
+  }
+
+  return await fallbackResponse.json();
 }
