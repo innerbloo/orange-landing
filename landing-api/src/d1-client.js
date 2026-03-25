@@ -34,3 +34,14 @@ export async function logError(db, message, url) {
     'INSERT INTO error_logs (message, url, created_at) VALUES (?, ?, ?)'
   ).bind(message, url, formatKoreanDate(new Date())).run();
 }
+
+/**
+ * 프로젝트별 D1 제출 데이터 조회
+ */
+export async function getSubmissions(db, project) {
+  const { results } = await db.prepare(
+    'SELECT project, phone, fields, created_at FROM submissions WHERE project = ? ORDER BY id ASC'
+  ).bind(project).all();
+
+  return results;
+}

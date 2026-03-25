@@ -4,7 +4,7 @@
 
 import { getAccessToken } from './google-auth.js';
 import { appendToSheet } from './sheets-client.js';
-import { isDuplicate, saveToD1, logError } from './d1-client.js';
+import { isDuplicate, saveToD1, logError, getSubmissions } from './d1-client.js';
 
 // Rate Limiting: IP별 요청 횟수 (메모리 기반, 인스턴스 재시작 시 초기화)
 const rateLimitMap = new Map();
@@ -58,6 +58,10 @@ export default {
       return corsResponse(origin, await handleSubmit(request, env, origin));
     }
 
+    if (url.pathname === '/api/sync' && request.method === 'POST') {
+      return corsResponse(origin, await handleSync(request, env));
+    }
+
     return corsResponse(origin, jsonResponse({ error: 'Not found' }, 404));
   },
 };
@@ -94,7 +98,23 @@ async function handleSubmit(request, env, origin) {
     const project = data.project || env.SHEET_NAME;
     const phone = data.fields['연락처'] || '';
 
-    // 5. D1 중복 체크 (랜딩별)
+    // 5. 연락처 유효성 검사
+    if (phone) {
+      const digits = phone.replace(/-/g, '');
+      const validPattern = /^010[2-9]\d{7}$/;
+      if (!validPattern.test(digits)) {
+        return jsonResponse({ success: false, error: '올바른 연락처를 입력해주세요.' }, 400);
+      }
+      const mid = digits.slice(3, 7);
+      const last = digits.slice(7, 11);
+      const allSame = /^(\d)\1{3}$/.test(mid) && /^(\d)\1{3}$/.test(last) && mid === last;
+      const blocked = ['01012345678', '01056781234', '01011112222', '01099998888'];
+      if (allSame || blocked.includes(digits)) {
+        return jsonResponse({ success: false, error: '유효하지 않은 연락처입니다.' }, 400);
+      }
+    }
+
+    // 6. D1 중복 체크 (랜딩별)
     if (phone) {
       const duplicate = await isDuplicate(env.DB, project, phone);
       if (duplicate) {
@@ -126,6 +146,57 @@ async function handleSubmit(request, env, origin) {
     } catch (_) {}
 
     return jsonResponse({ success: false, error: '저장 중 오류가 발생했습니다.' }, 500);
+  }
+}
+
+/**
+ * D1 → 구글시트 재동기화
+ * POST /api/sync { "project": "오렌지플래닛", "sheetId": "선택" }
+ */
+async function handleSync(request, env) {
+  try {
+    let data;
+    try {
+      data = await request.json();
+    } catch {
+      return jsonResponse({ success: false, error: '잘못된 요청 형식입니다.' }, 400);
+    }
+
+    const project = data.project;
+    if (!project) {
+      return jsonResponse({ success: false, error: 'project 항목이 필요합니다.' }, 400);
+    }
+
+    // D1에서 해당 프로젝트 데이터 조회
+    const submissions = await getSubmissions(env.DB, project);
+    if (submissions.length === 0) {
+      return jsonResponse({ success: true, message: '동기화할 데이터가 없습니다.', synced: 0 });
+    }
+
+    // 구글시트에 한 건씩 append
+    const accessToken = await getAccessToken(env);
+    let synced = 0;
+
+    for (const row of submissions) {
+      const fields = JSON.parse(row.fields);
+      const sheetData = {
+        sheetId: data.sheetId,
+        project: row.project,
+        fields,
+      };
+
+      try {
+        await appendToSheet(accessToken, env, sheetData);
+        synced++;
+      } catch (e) {
+        console.error(`동기화 실패 (${row.phone}):`, e);
+      }
+    }
+
+    return jsonResponse({ success: true, message: `${synced}/${submissions.length}건 동기화 완료`, synced });
+  } catch (error) {
+    console.error('동기화 오류:', error);
+    return jsonResponse({ success: false, error: '동기화 중 오류가 발생했습니다.' }, 500);
   }
 }
 

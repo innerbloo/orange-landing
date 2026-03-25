@@ -11,18 +11,19 @@ const formMessage = document.getElementById('form-message');
 // 프로젝트명 (로컬스토리지 키로도 사용)
 const PROJECT = '오렌지플래닛';
 
-// 로컬스토리지 중복 체크 (1차 차단)
-if (localStorage.getItem(`submitted_${PROJECT}`)) {
-    submitBtn.disabled = true;
-    showMessage('이미 신청하셨습니다.', 'error');
-}
-
 // 폼 제출 처리
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // 이미 제출 중이면 무시
     if (submitBtn.disabled) return;
+
+    // 로컬스토리지 중복 체크 (1차 차단 — 같은 번호만)
+    const phoneValue = document.getElementById('phone').value.replace(/-/g, '');
+    if (localStorage.getItem(`submitted_${PROJECT}_${phoneValue}`)) {
+        showMessage('이미 신청하셨습니다.', 'error');
+        return;
+    }
 
     // 폼 데이터 수집
     const formData = {
@@ -55,7 +56,7 @@ form.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (result.success) {
-            localStorage.setItem(`submitted_${PROJECT}`, 'true');
+            localStorage.setItem(`submitted_${PROJECT}_${phoneValue}`, 'true');
             showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
             form.reset();
             submitBtn.disabled = true;
@@ -87,10 +88,22 @@ function validateForm(fields) {
         return false;
     }
 
-    // 연락처 형식 검사 (간단한 패턴)
-    const phonePattern = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
-    if (!phonePattern.test(fields['연락처'].replace(/-/g, ''))) {
-        showMessage('올바른 연락처 형식을 입력해주세요.', 'error');
+    // 연락처 형식 검사 (010-2XXX~9XXX만 허용)
+    const phoneDigits = fields['연락처'].replace(/-/g, '');
+    const phonePattern = /^010[2-9][0-9]{7}$/;
+    if (!phonePattern.test(phoneDigits)) {
+        showMessage('올바른 연락처를 입력해주세요.', 'error');
+        document.getElementById('phone').focus();
+        return false;
+    }
+
+    // 허위 번호 차단 (반복 패턴, 테스트 번호)
+    const middle = phoneDigits.slice(3, 7);
+    const last = phoneDigits.slice(7, 11);
+    const allSameDigit = /^(\d)\1{3}$/.test(middle) && /^(\d)\1{3}$/.test(last) && middle === last;
+    const testNumbers = ['01012345678', '01056781234', '01011112222', '01099998888'];
+    if (allSameDigit || testNumbers.includes(phoneDigits)) {
+        showMessage('유효하지 않은 연락처입니다.', 'error');
         document.getElementById('phone').focus();
         return false;
     }
