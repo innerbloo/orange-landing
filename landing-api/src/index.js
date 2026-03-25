@@ -5,6 +5,7 @@
 
 import { getAccessToken } from './google-auth.js';
 import { appendToSheet } from './sheets-client.js';
+import { isDuplicate, saveToD1 } from './d1-client.js';
 // import { callBuzzvilApi } from './buzzvil-client.js'; // 향후 활성화
 
 export default {
@@ -47,7 +48,22 @@ async function handleSubmit(request, env) {
       return jsonResponse({ success: false, error: 'fields 항목이 필요합니다.' }, 400);
     }
 
-    // 3. Google Sheets API 인증 + 저장
+    const project = data.project || env.SHEET_NAME;
+    const phone = data.fields['연락처'] || '';
+
+    // 3. D1 중복 체크 (랜딩별)
+    if (phone) {
+      const duplicate = await isDuplicate(env.DB, project, phone);
+      if (duplicate) {
+        return jsonResponse({ success: false, error: '이미 신청하셨습니다.' }, 409);
+      }
+    }
+
+    // 4. D1 원본 저장 + 구글시트 저장
+    if (phone) {
+      await saveToD1(env.DB, project, phone, data.fields);
+    }
+
     const accessToken = await getAccessToken(env);
     await appendToSheet(accessToken, env, data);
 
