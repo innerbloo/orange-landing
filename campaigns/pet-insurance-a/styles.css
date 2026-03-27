@@ -263,11 +263,74 @@ a {
   /*width: 160px;*/
 }
 
+/* CHECK 02 이미지 원형 glow 배경 */
+.check-section:nth-of-type(3) .check-image-wrap::before {
+  content: '';
+  position: absolute;
+  width: 174px;
+  height: 174px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180, 230, 200, 0.5) 0%, rgba(180, 230, 200, 0) 70%);
+  top: 50%;
+  left: 38%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
 .check-bottom-text {
   font-size: 14px;
   font-weight: 500;
   color: #191f28;
   margin-top: 12px;
+}
+
+.check-bottom-underline {
+  text-decoration: underline;
+}
+
+/* CHECK 02 체크리스트 카드 */
+.check-section:nth-of-type(3) .info-card {
+  display: flex;
+  justify-content: center;
+}
+
+.check-section:nth-of-type(3) .checklist {
+  max-width: fit-content;
+}
+
+.check-section:nth-of-type(3) .checklist li {
+  font-size: 12px;
+  line-height: 18px;
+  padding: 4px 0;
+}
+
+/* CHECK 02 subtitle */
+.check02-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #191f28;
+  margin-bottom: 16px;
+  line-height: 18px;
+}
+
+.check02-subtitle-bold {
+  font-weight: 700;
+  color: #0036e5;
+}
+
+/* Gradient text bold variant */
+.gradient-text-bold {
+  background: linear-gradient(119deg, #00bbff 17.5%, #0036e5 82.1%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* 단색 파란 볼드 */
+.text-blue-bold {
+  color: #0036e5;
+  font-weight: 800;
 }
 
 /* Info Card */
