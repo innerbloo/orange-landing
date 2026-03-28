@@ -6,9 +6,6 @@
 }
 
 /* Reset & Base */
-html {
-}
-
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -73,19 +70,7 @@ a {
   margin-bottom: 10px;
 }
 
-.hero-desc {
-  font-size: 12px;
-  font-weight: 500;
-  color: #191f28;
-  line-height: 1.6;
-  margin-bottom: 4px;
-}
 
-.hero-highlight {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
 
 .hero-card {
   background: #f6f9fe;
@@ -258,12 +243,6 @@ a {
   margin: 10px 0;
 }
 
-.check-subtitle {
-  font-size: 14px;
-  font-weight: 700;
-  color: #0036e5;
-  margin-bottom: 16px;
-}
 
 .check-desc {
   font-size: 14px;
@@ -294,7 +273,7 @@ a {
   z-index: 2;
   text-align: center;
   margin-top: -200px;
-  margin-bottom: -30px;
+  margin-bottom: -40px;
 }
 
 .section-05-illust img {
@@ -357,14 +336,6 @@ a {
   color: #0036e5;
 }
 
-/* Gradient text bold variant */
-.gradient-text-bold {
-  background: linear-gradient(119deg, #00bbff 17.5%, #0036e5 82.1%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 800;
-}
 
 /* 단색 파란 볼드 */
 .text-blue-bold {
@@ -629,11 +600,6 @@ a {
   text-align: center;
 }
 
-.compare-subtitle {
-  font-size: 14px;
-  color: #191f28;
-  margin-bottom: 16px;
-}
 
 .compare-table-wrap {
   overflow-x: auto;
