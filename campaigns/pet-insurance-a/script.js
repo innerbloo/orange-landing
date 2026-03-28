@@ -8,7 +8,7 @@ const btnLoading = submitBtn.querySelector('.btn-loading');
 const formMessage = document.getElementById('form-message');
 
 // 프로젝트명
-const PROJECT = '펫보험A';
+const PROJECT = '펫보험-A';
 
 // 반려동물 타입 토글
 let petType = '';
@@ -48,6 +48,7 @@ form.addEventListener('submit', async (e) => {
     }
 
     const formData = {
+        sheetId: '11MKLOt1BwPG-cXKohjaCTZdgda3aw85Z6irEiFufxdw',
         project: PROJECT,
         fields: {
             '반려동물유형': petType === 'cat' ? '반려묘' : '반려견',
