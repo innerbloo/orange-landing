@@ -1,6 +1,5 @@
 /* Reset & Base */
 html {
-  scroll-behavior: smooth;
 }
 
 *, *::before, *::after {
@@ -1193,15 +1192,90 @@ a {
   word-break: keep-all;
 }
 
+/* ========== 동적 요소 ========== */
+
+/* 1. 플로팅 CTA */
+.sticky-cta {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(calc(100% + 16px));
+  width: calc(100% - 32px);
+  max-width: 388px;
+  z-index: 50;
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  display: block;
+  background: #0036e5;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  height: 42px;
+  line-height: 42px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 54, 229, 0.3);
+  text-align: center;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.sticky-cta.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 2. 체크포인트 카드 + 반려묘 카드 순차 슬라이드 */
+.checkpoint-card,
+.cat-card {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.checkpoint-card.visible,
+.cat-card.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 3. 가입조건 카드 스케일인 */
+.benefit-card {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.benefit-card.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/* 5. 화살표 아이콘 바운스 */
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(4px); }
+  60% { transform: translateY(4px); }
+}
+
+@keyframes bounce-up {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+  60% { transform: translateY(-4px); }
+}
+
+.section-10.visible .value-card:nth-child(1) .value-card-icon {
+  animation: bounce-down 1.2s ease infinite;
+}
+
+.section-10.visible .value-card:nth-child(2) .value-card-icon {
+  animation: bounce-up 1.2s ease infinite;
+}
+
 /* ========== PC 반응형 (768px+) ========== */
 @media (min-width: 768px) {
-  html {
-    background: #f0f2f5;
-  }
-
   body {
     max-width: 480px;
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
-    min-height: 100vh;
   }
 }

@@ -237,6 +237,95 @@ const fadeObserver = new IntersectionObserver(
 );
 document.querySelectorAll('.fade-up').forEach((el) => fadeObserver.observe(el));
 
+// 숫자 카운트업 애니메이션
+const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix;
+        const duration = 1500;
+        const start = performance.now();
+
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const current = Math.round(target * eased);
+            el.textContent = current.toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+        countObserver.unobserve(el);
+    });
+}, { threshold: 0.5 });
+document.querySelectorAll('.count-up').forEach((el) => countObserver.observe(el));
+
+// 체크포인트 카드 + 가입조건 카드 + 테이블 행 순차 애니메이션
+const staggerObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const parent = entry.target;
+        const items = parent.querySelectorAll('[data-stagger]');
+        items.forEach((item, i) => {
+            item.style.transitionDelay = `${i * 0.1}s`;
+            setTimeout(() => item.classList.add('visible'), 10);
+        });
+        staggerObserver.unobserve(parent);
+    });
+}, { threshold: 0.15 });
+
+// 체크포인트 카드에 data-stagger 추가
+document.querySelectorAll('.checkpoint-card').forEach((el) => el.dataset.stagger = '');
+const checkpointList = document.querySelector('.checkpoint-list');
+if (checkpointList) staggerObserver.observe(checkpointList);
+
+// 반려묘 카드에 data-stagger 추가
+document.querySelectorAll('.cat-card').forEach((el) => el.dataset.stagger = '');
+const catCardList = document.querySelector('.cat-card-list');
+if (catCardList) staggerObserver.observe(catCardList);
+
+// 가입조건 카드에 data-stagger 추가
+document.querySelectorAll('.benefit-card').forEach((el) => el.dataset.stagger = '');
+document.querySelectorAll('.benefit-column').forEach((col) => staggerObserver.observe(col));
+
+
+// 플로팅 CTA 표시/숨김
+const stickyCta = document.getElementById('sticky-cta');
+const stickyShowObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+            stickyCta.classList.add('show');
+        } else {
+            stickyCta.classList.remove('show');
+        }
+    });
+}, { threshold: 0 });
+
+const stickyHideObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            stickyCta.classList.remove('show');
+        }
+    });
+}, { threshold: 0.1 });
+
+const section05 = document.querySelector('.section-05');
+const section12 = document.querySelector('.section-12');
+if (section05) stickyShowObserver.observe(section05);
+if (section12) stickyHideObserver.observe(section12);
+
+// 앵커 링크 smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+
 // 모달 백그라운드 클릭으로 닫기 + 스크롤 방지
 document.querySelectorAll('.modal-overlay').forEach((modal) => {
     modal.addEventListener('click', (e) => {
