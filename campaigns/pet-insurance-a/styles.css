@@ -1192,3 +1192,16 @@ a {
   border-top: 1px solid #e8ecf0;
   word-break: keep-all;
 }
+
+/* ========== PC 반응형 (768px+) ========== */
+@media (min-width: 768px) {
+  html {
+    background: #f0f2f5;
+  }
+
+  body {
+    max-width: 480px;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+  }
+}
