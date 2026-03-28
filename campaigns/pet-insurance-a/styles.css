@@ -1,3 +1,10 @@
+/* Font display swap 강제 */
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-display: swap;
+  src: local('Pretendard Variable');
+}
+
 /* Reset & Base */
 html {
 }
@@ -759,7 +766,7 @@ a {
 .value-card-icon {
   width: 32px;
   height: 32px;
-  margin: 0 auto 8px;
+  margin: 4px auto 12px;
   object-fit: contain;
 }
 
@@ -1255,13 +1262,13 @@ a {
 /* 5. 화살표 아이콘 바운스 */
 @keyframes bounce-down {
   0%, 100% { transform: translateY(0); }
-  30% { transform: translateY(4px); }
+  30% { transform: translateY(6px); }
   60% { transform: translateY(4px); }
 }
 
 @keyframes bounce-up {
   0%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-4px); }
+  30% { transform: translateY(-6px); }
   60% { transform: translateY(-4px); }
 }
 

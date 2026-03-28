@@ -290,21 +290,35 @@ document.querySelectorAll('.benefit-card').forEach((el) => el.dataset.stagger = 
 document.querySelectorAll('.benefit-column').forEach((col) => staggerObserver.observe(col));
 
 
-// 플로팅 CTA 표시/숨김 (폼 영역에서만 숨김)
+// 플로팅 CTA 표시/숨김
 const stickyCta = document.getElementById('sticky-cta');
-stickyCta.classList.add('show');
+let passedSection01 = false;
+
+const stickyShowObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.boundingClientRect.bottom < 0) {
+            passedSection01 = true;
+            stickyCta.classList.add('show');
+        } else if (entry.isIntersecting) {
+            passedSection01 = false;
+            stickyCta.classList.remove('show');
+        }
+    });
+}, { threshold: 0 });
 
 const stickyHideObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
             stickyCta.classList.remove('show');
-        } else {
+        } else if (passedSection01) {
             stickyCta.classList.add('show');
         }
     });
 }, { threshold: 0.1 });
 
+const section01 = document.querySelector('.section-01');
 const section12 = document.querySelector('.section-12');
+if (section01) stickyShowObserver.observe(section01);
 if (section12) stickyHideObserver.observe(section12);
 
 // 앵커 링크 smooth scroll
