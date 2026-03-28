@@ -60,7 +60,7 @@ form.addEventListener('submit', async (e) => {
             '품종': document.getElementById('pet-breed').value.trim(),
             '성별': document.getElementById('pet-gender').value.trim(),
             '몸무게': document.getElementById('pet-weight').value.trim(),
-            '중성화여부': document.getElementById('pet-neutered').value.trim(),
+            '중성화여부': document.getElementById('pet-neutered').value === '중성화 완료' ? 'Y' : 'N',
             '개인정보동의': document.getElementById('privacy').checked ? 'Y' : 'N',
             '광고수신동의': document.getElementById('marketing').checked ? 'Y' : 'N',
         }
@@ -110,6 +110,15 @@ function showHelpText(el, msg) {
 function clearHelpTexts() {
     document.querySelectorAll('.form-help-text').forEach(el => el.remove());
 }
+
+// 입력 시 해당 헬프텍스트 제거
+document.querySelectorAll('.form-group input, .form-group select').forEach((el) => {
+    const event = el.tagName === 'SELECT' ? 'change' : 'input';
+    el.addEventListener(event, () => {
+        const help = el.closest('.form-group')?.querySelector('.form-help-text');
+        if (help) help.remove();
+    });
+});
 
 function validateForm(fields) {
     clearHelpTexts();
