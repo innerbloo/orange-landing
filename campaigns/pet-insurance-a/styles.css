@@ -178,7 +178,7 @@ a {
 
 .cta-disclaimer {
   font-size: 12px;
-  color: #757575;
+  color: #6b6b6b;
   text-align: center;
   margin-top: 15px;
 }
@@ -584,12 +584,12 @@ a {
 .cat-card-tag {
   font-size: 10px;
   font-weight: 400;
-  color: #757575;
+  color: #6b6b6b;
 }
 
 .section-disclaimer {
   font-size: 12px;
-  color: #757575;
+  color: #6b6b6b;
   margin-top: 8px;
 }
 
@@ -1007,7 +1007,7 @@ a {
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #757575;
+  color: #6b6b6b;
   cursor: pointer;
   flex: 1;
 }
@@ -1021,7 +1021,7 @@ a {
 
 .more-link {
   font-size: 12px;
-  color: #757575;
+  color: #6b6b6b;
   flex-shrink: 0;
   text-decoration: underline;
   background: none;
@@ -1122,7 +1122,7 @@ a {
   background: none;
   border: none;
   font-size: 24px;
-  color: #757575;
+  color: #6b6b6b;
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -1151,7 +1151,7 @@ a {
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px solid #e8ecf0;
-  color: #757575;
+  color: #6b6b6b;
   font-size: 11px;
 }
 
@@ -1159,7 +1159,7 @@ a {
 .footer {
   padding: 24px 16px 40px;
   font-size: 10px;
-  color: #757575;
+  color: #6b6b6b;
   line-height: 1.6;
   border-top: 1px solid #e8ecf0;
   word-break: keep-all;
