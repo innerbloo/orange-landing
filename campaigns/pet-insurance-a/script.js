@@ -11,11 +11,12 @@ const formMessage = document.getElementById('form-message');
 const PROJECT = '펫보험A';
 
 // 반려동물 타입 토글
-let petType = 'cat';
+let petType = '';
 document.querySelectorAll('.pet-type-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.pet-type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        document.querySelector('.pet-type-toggle').classList.add('selected');
         petType = btn.dataset.type;
     });
 });
@@ -96,15 +97,30 @@ form.addEventListener('submit', async (e) => {
 });
 
 // 유효성 검사
+function showHelpText(el, msg) {
+    clearHelpTexts();
+    const help = document.createElement('p');
+    help.className = 'form-help-text';
+    help.textContent = msg;
+    el.closest('.form-group, .agreement-section, .pet-type-toggle')?.appendChild(help);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearHelpTexts() {
+    document.querySelectorAll('.form-help-text').forEach(el => el.remove());
+}
+
 function validateForm(fields) {
+    clearHelpTexts();
+
     if (!fields['보호자이름']) {
-        showMessage('보호자 이름을 입력해주세요.', 'error');
+        showHelpText(document.getElementById('guardian-name'), '보호자 이름을 입력해주세요.');
         document.getElementById('guardian-name').focus();
         return false;
     }
 
     if (!fields['연락처']) {
-        showMessage('연락처를 입력해주세요.', 'error');
+        showHelpText(document.getElementById('phone'), '연락처를 입력해주세요.');
         document.getElementById('phone').focus();
         return false;
     }
@@ -113,7 +129,7 @@ function validateForm(fields) {
     const phoneDigits = fields['연락처'].replace(/-/g, '');
     const phonePattern = /^010[2-9]\d{7}$/;
     if (!phonePattern.test(phoneDigits)) {
-        showMessage('올바른 연락처를 입력해주세요.', 'error');
+        showHelpText(document.getElementById('phone'), '올바른 연락처를 입력해주세요.');
         document.getElementById('phone').focus();
         return false;
     }
@@ -124,30 +140,65 @@ function validateForm(fields) {
     const allSameDigit = /^(\d)\1{3}$/.test(middle) && /^(\d)\1{3}$/.test(last) && middle === last;
     const testNumbers = ['01012345678', '01056781234', '01011112222', '01099998888'];
     if (allSameDigit || testNumbers.includes(phoneDigits)) {
-        showMessage('유효하지 않은 연락처입니다.', 'error');
+        showHelpText(document.getElementById('phone'), '유효하지 않은 연락처입니다.');
         document.getElementById('phone').focus();
         return false;
     }
 
     if (!fields['보호자생년월일']) {
-        showMessage('보호자 생년월일을 입력해주세요.', 'error');
+        showHelpText(document.getElementById('guardian-birth'), '보호자 생년월일을 입력해주세요.');
         document.getElementById('guardian-birth').focus();
         return false;
     }
 
     if (!fields['반려동물이름']) {
-        showMessage('반려동물 이름을 입력해주세요.', 'error');
+        showHelpText(document.getElementById('pet-name'), '반려동물 이름을 입력해주세요.');
         document.getElementById('pet-name').focus();
         return false;
     }
 
+    if (!fields['반려동물생년월일']) {
+        showHelpText(document.getElementById('pet-birth'), '반려동물 생년월일을 입력해주세요.');
+        document.getElementById('pet-birth').focus();
+        return false;
+    }
+
+    if (!fields['품종']) {
+        showHelpText(document.getElementById('pet-breed'), '품종을 입력해주세요.');
+        document.getElementById('pet-breed').focus();
+        return false;
+    }
+
+    if (!fields['성별']) {
+        showHelpText(document.getElementById('pet-gender'), '성별을 선택해주세요.');
+        document.getElementById('pet-gender').focus();
+        return false;
+    }
+
+    if (!fields['몸무게']) {
+        showHelpText(document.getElementById('pet-weight'), '몸무게를 입력해주세요.');
+        document.getElementById('pet-weight').focus();
+        return false;
+    }
+
+    if (!fields['중성화여부']) {
+        showHelpText(document.getElementById('pet-neutered'), '중성화 여부를 선택해주세요.');
+        document.getElementById('pet-neutered').focus();
+        return false;
+    }
+
+    if (!petType) {
+        showHelpText(document.querySelector('.pet-type-toggle'), '반려동물 유형을 선택해주세요.');
+        return false;
+    }
+
     if (fields['개인정보동의'] !== 'Y') {
-        showMessage('개인정보 제3자 제공에 동의해주세요.', 'error');
+        showHelpText(document.getElementById('privacy'), '개인정보 제3자 제공에 동의해주세요.');
         return false;
     }
 
     if (fields['광고수신동의'] !== 'Y') {
-        showMessage('광고성 정보수신에 동의해주세요.', 'error');
+        showHelpText(document.getElementById('marketing'), '광고성 정보수신에 동의해주세요.');
         return false;
     }
 
@@ -186,6 +237,59 @@ const fadeObserver = new IntersectionObserver(
 );
 document.querySelectorAll('.fade-up').forEach((el) => fadeObserver.observe(el));
 
+// 모달 백그라운드 클릭으로 닫기 + 스크롤 방지
+document.querySelectorAll('.modal-overlay').forEach((modal) => {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+});
+
+document.querySelectorAll('.modal-close').forEach((btn) => {
+    btn.addEventListener('click', () => {
+        btn.closest('.modal-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    });
+});
+
+document.querySelectorAll('.more-link').forEach((link) => {
+    link.addEventListener('click', () => {
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+// select 선택 시 스타일 변경
+document.querySelectorAll('.form-group select').forEach((select) => {
+    select.addEventListener('change', (e) => {
+        if (e.target.value) {
+            e.target.classList.add('selected');
+        } else {
+            e.target.classList.remove('selected');
+        }
+    });
+});
+
+// 몸무게 자동 kg 포맷팅
+document.getElementById('pet-weight').addEventListener('input', (e) => {
+    let value = e.target.value.replace(/[^0-9.]/g, '');
+    // 소수점 하나만 허용
+    const parts = value.split('.');
+    if (parts.length > 2) value = parts[0] + '.' + parts[1];
+    // 정수 2자리, 소수 1자리 제한 (xx.x)
+    if (parts[0].length > 2) parts[0] = parts[0].slice(0, 2);
+    if (parts.length === 2 && parts[1].length > 1) parts[1] = parts[1].slice(0, 1);
+    value = parts.length === 2 ? parts[0] + '.' + parts[1] : parts[0];
+    if (value) {
+        e.target.value = value + 'kg';
+    } else {
+        e.target.value = '';
+    }
+    const pos = e.target.value.length - 2;
+    e.target.setSelectionRange(pos, pos);
+});
+
 // 연락처 자동 포맷팅
 document.getElementById('phone').addEventListener('input', (e) => {
     let value = e.target.value.replace(/[^0-9]/g, '');
@@ -196,3 +300,28 @@ document.getElementById('phone').addEventListener('input', (e) => {
     }
     e.target.value = value;
 });
+
+// 생년월일 자동 포맷팅 (yyyy.mm.dd)
+function formatBirthInput(e) {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 8);
+}
+
+function formatBirthBlur(e) {
+    let value = e.target.value.replace(/[^0-9]/g, '');
+    if (!value) return;
+    // 6자리 → yymmdd → yyyymmdd
+    if (value.length === 6) {
+        const yy = parseInt(value.slice(0, 2));
+        const currentYY = new Date().getFullYear() % 100;
+        const prefix = yy > currentYY ? '19' : '20';
+        value = prefix + value;
+    }
+    if (value.length === 8) {
+        e.target.value = value.slice(0, 4) + '.' + value.slice(4, 6) + '.' + value.slice(6);
+    }
+}
+
+document.getElementById('guardian-birth').addEventListener('input', formatBirthInput);
+document.getElementById('guardian-birth').addEventListener('blur', formatBirthBlur);
+document.getElementById('pet-birth').addEventListener('input', formatBirthInput);
+document.getElementById('pet-birth').addEventListener('blur', formatBirthBlur);

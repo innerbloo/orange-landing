@@ -1,4 +1,8 @@
 /* Reset & Base */
+html {
+  scroll-behavior: smooth;
+}
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -9,7 +13,7 @@ body {
   font-family: 'Pretendard Variable', -apple-system, sans-serif;
   color: #191f28;
   background: #ffffff;
-  max-width: 430px;
+  max-width: 420px;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -36,7 +40,7 @@ a {
 
 /* Header */
 .header {
-  padding: 26px 10px;
+  padding: 22px 18px 30px;
 }
 
 .logo {
@@ -44,10 +48,10 @@ a {
   height: 29px;
 }
 
-/* Hero */
-.hero {
+/* section-01: 히어로 */
+.section-01 {
   text-align: center;
-  padding: 0 10px;
+  padding: 0 16px;
 }
 
 .hero-subtitle {
@@ -157,9 +161,9 @@ a {
   font-weight: 900;
 }
 
-/* CTA Button */
-.cta-section {
-  padding: 10px 10px 20px;
+/* section-02: CTA 버튼 */
+.section-02 {
+  padding: 10px 16px 20px;
 }
 
 .cta-button {
@@ -199,27 +203,46 @@ a {
   border-radius: 10px;
 }
 
-/* Check Sections */
-.check-section {
-  padding: 30px 10px;
+/* section-03: CHECK 01 펫보험이란? */
+.section-03 {
+  padding: 30px 16px;
   text-align: center;
   overflow: hidden;
 }
 
-.check-section .info-card-desc {
+.section-03 .info-card-desc {
   font-size: 14px;
   line-height: 18px;
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
-.check-section .info-card-desc span {
+.section-03 .info-card-desc span {
   color: #0036e5;
 }
 
-.check-section .info-card-sub-desc {
+.section-03 .info-card-sub-desc {
     font-size: 12px;
     line-height: 16px;
+}
+
+/* section-04: CHECK 02 펫보험 꼭 필요한가요? */
+.section-04 {
+  padding: 30px 16px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* section-05: CHECK 03 체크포인트 */
+.section-05 {
+  padding: 30px 16px 220px;
+  text-align: center;
+  background: radial-gradient(circle at 50% 90%, #9CF2FF 0%, rgba(156, 242, 255, 0) 40%) no-repeat bottom center / 0px 0px;
+  transition: background-size 1s ease;
+}
+
+.section-05.visible {
+  background: radial-gradient(circle at 50% 90%, #9CF2FF 0%, rgba(156, 242, 255, 0) 40%) no-repeat bottom center / 350px 350px;
 }
 
 .section-title {
@@ -243,12 +266,11 @@ a {
 }
 
 .check-image-wrap {
+  width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
-  margin: 12px 0;
-  overflow: hidden;
-  padding: 10px 0;
+  overflow: visible;
 }
 
 .check-image-wrap .glow {
@@ -259,12 +281,23 @@ a {
 
 .check-image {
   position: relative;
-  z-index: 1;
-  /*width: 160px;*/
 }
 
-/* CHECK 02 이미지 원형 glow 배경 */
-.check-section:nth-of-type(3) .check-image-wrap::before {
+.section-05-illust {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: -200px;
+  margin-bottom: -30px;
+}
+
+.section-05-illust img {
+  max-width: 100%;
+}
+
+
+/* section-04 이미지 원형 glow 배경 */
+.section-04 .check-image-wrap::before {
   content: '';
   position: absolute;
   width: 174px;
@@ -281,24 +314,24 @@ a {
   font-size: 14px;
   font-weight: 500;
   color: #191f28;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .check-bottom-underline {
   text-decoration: underline;
 }
 
-/* CHECK 02 체크리스트 카드 */
-.check-section:nth-of-type(3) .info-card {
+/* section-04 체크리스트 카드 */
+.section-04 .info-card {
   display: flex;
   justify-content: center;
 }
 
-.check-section:nth-of-type(3) .checklist {
+.section-04 .checklist {
   max-width: fit-content;
 }
 
-.check-section:nth-of-type(3) .checklist li {
+.section-04 .checklist li {
   font-size: 12px;
   line-height: 18px;
   padding: 4px 0;
@@ -351,7 +384,7 @@ a {
 .info-card-desc {
   font-size: 12px;
   color: #191f28;
-  line-height: 1.8;
+  line-height: 1.6;
 }
 
 .info-card--center {
@@ -392,7 +425,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 16px;
 }
 
 .checkpoint-card {
@@ -405,8 +437,8 @@ a {
 }
 
 .checkpoint-icon {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 }
 
@@ -418,55 +450,105 @@ a {
   text-align: left;
 }
 
-.checkpoint-arrow {
-  font-size: 20px;
-  color: #919191;
+.checkpoint-sub {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.checkpoint-arrow-icon {
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
 }
 
-/* Blue Section */
-.blue-section {
+/* section-06: 가입조건 및 보장 */
+.section-06 {
   background: #0036e5;
-  padding: 30px 10px;
+  padding: 40px 16px;
   text-align: center;
 }
 
 .blue-title {
   font-size: 22px;
   font-weight: 700;
-  color: #f6f9fe;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
+.blue-title-highlight {
+  background: linear-gradient(85.01deg, #00B3FF 17.88%, #62FF00 110.58%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
 .benefit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 10px;
   margin-bottom: 16px;
+}
+
+.benefit-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .benefit-card {
   background: #f6f9fe;
   border-radius: 8px;
-  padding: 14px 12px;
+  padding: 10px 12px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 
 .benefit-card-icon {
-  width: 36px;
-  height: 36px;
-  margin: 0 auto 8px;
+  margin: 0 auto 6px;
+}
+
+.benefit-card-icon[src*="money-bag"] {
+  width: 35px;
+  height: 35px;
+}
+
+.benefit-card-icon[src*="xray-skeleton"] {
+  width: 32px;
+  height: 32px;
+}
+
+.benefit-card-icon[src*="rainbow-pet-memorial"] {
+  width: 55px;
+  height: 37.45px;
 }
 
 .benefit-card-title {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.4;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+}
+
+.benefit-card-title:last-child {
+  margin-bottom: 0;
 }
 
 .benefit-card-desc {
   font-size: 12px;
+  font-weight: 700;
+  color: #191f28;
+  line-height: 1.4;
+}
+
+.benefit-card-sub {
+  font-size: 12px;
+  font-weight: 400;
   color: #191f28;
   line-height: 1.4;
 }
@@ -477,9 +559,9 @@ a {
   opacity: 0.8;
 }
 
-/* Cat Section */
-.cat-section {
-  padding: 30px 10px;
+/* section-07: 반려묘 보장내용 */
+.section-07 {
+  padding: 30px 16px 40px;
   text-align: center;
 }
 
@@ -495,12 +577,12 @@ a {
   align-items: center;
   background: #f6f9fe;
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 12px 10px;
   gap: 12px;
 }
 
 .cat-card-icon {
-  width: 54px;
+  width: 71px;
   height: 54px;
   flex-shrink: 0;
   object-fit: contain;
@@ -514,12 +596,18 @@ a {
   font-size: 12px;
   font-weight: 700;
   color: #191f28;
-  margin-bottom: 4px;
 }
 
 .cat-card-desc {
   font-size: 12px;
+  font-weight: 500;
   color: #191f28;
+}
+
+.cat-card-tag {
+  font-size: 10px;
+  font-weight: 400;
+  color: #919191;
 }
 
 .section-disclaimer {
@@ -528,10 +616,10 @@ a {
   margin-top: 8px;
 }
 
-/* Compare Table */
-.compare-section {
+/* section-08: 보험사별 비교 테이블 */
+.section-08 {
   background: #f6f9fe;
-  padding: 30px 10px;
+  padding: 30px 16px;
   text-align: center;
 }
 
@@ -543,6 +631,7 @@ a {
 
 .compare-table-wrap {
   overflow-x: auto;
+  margin: 16px 0;
 }
 
 .compare-table {
@@ -567,53 +656,59 @@ a {
 }
 
 .compare-table td {
-  padding: 10px 8px;
+  padding: 0 8px;
+  height: 50px;
   text-align: center;
   font-size: 10px;
   color: #191f28;
-  border-bottom: 1px solid #e8ecf0;
+  border-bottom: 1px solid #919191;
 }
 
 .compare-table .row-label {
   font-size: 10px;
   font-weight: 700;
-  text-align: left;
+  text-align: center;
   background: #f6f9fe;
   width: 70px;
 }
 
 .compare-table .row-label-sub {
-  font-weight: 400;
-  font-size: 9px;
-  color: #919191;
+  font-weight: 700;
+  font-size: 10px;
+  color: #191f28;
 }
 
-.compare-table .highlight {
+.compare-table .td-bold {
   font-weight: 700;
   font-size: 12px;
-  background: #fcfdff;
 }
 
-/* Help Section */
-.help-section {
-  padding: 40px 10px;
+.compare-table .td-highlight {
+  background: #f6f9fe;
+}
+
+/* section-09: 어려우신가요 */
+.section-09 {
+  padding: 40px 16px 0;
   text-align: center;
   overflow: hidden;
 }
 
 .help-text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #191f28;
   line-height: 1.5;
-  margin-bottom: 16px;
+}
+
+.help-text-bold {
+  font-size: 22px;
 }
 
 .help-image-wrap {
   position: relative;
   display: flex;
   justify-content: center;
-  margin: 16px 0;
   overflow: hidden;
   padding: 20px 0;
 }
@@ -627,19 +722,24 @@ a {
 .help-image {
   position: relative;
   z-index: 1;
-  width: 80px;
+  width: 122px;
 }
 
 .help-highlight {
   font-size: 18px;
   font-weight: 700;
   color: #191f28;
-  line-height: 1.6;
+  line-height: 1.2;
 }
 
-/* Value Section */
-.value-section {
-  padding: 20px 10px 30px;
+.help-highlight .gradient-text {
+  font-size: 40px;
+  font-weight: 800;
+}
+
+/* section-10: 가치 제안 카드 */
+.section-10 {
+  padding: 20px 16px 30px;
   text-align: center;
 }
 
@@ -658,10 +758,17 @@ a {
 }
 
 .value-card-icon {
-  width: 50px;
-  height: 50px;
+  width: 32px;
+  height: 32px;
   margin: 0 auto 8px;
   object-fit: contain;
+}
+
+.value-card-arrow {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .value-card-text {
@@ -676,19 +783,41 @@ a {
   color: #191f28;
 }
 
-/* Plan Section */
-.plan-section {
-  padding: 30px 10px;
+/* section-11: 맞춤형 플랜 */
+.section-11 {
+  padding: 30px 16px;
   text-align: center;
   overflow: hidden;
+}
+
+.plan-badge {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 8px;
 }
 
 .plan-text {
   font-size: 18px;
   font-weight: 700;
   color: #191f28;
-  line-height: 1.5;
+  line-height: 1.2;
   margin-bottom: 16px;
+}
+
+.plan-text-bold {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.info-card-title-14 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #191f28;
+  margin-bottom: 4px;
+}
+
+.info-card-bold {
+  font-weight: 800;
 }
 
 .plan-image-wrap {
@@ -697,7 +826,6 @@ a {
   justify-content: center;
   margin: 16px 0;
   overflow: hidden;
-  padding: 20px 0;
 }
 
 .plan-image-wrap .glow {
@@ -709,28 +837,28 @@ a {
 .plan-image {
   position: relative;
   z-index: 1;
-  width: 160px;
+  width: 230px;
 }
 
-.plan-section .info-card {
+.section-11 .info-card {
   margin-bottom: 16px;
 }
 
-.plan-section .cta-button {
+.section-11 .cta-button {
   margin-top: 0;
 }
 
-/* Form Section */
-.form-section {
-  padding: 30px 10px 20px;
+/* section-12: 폼 */
+.section-12 {
+  padding: 30px 16px 20px;
 }
 
 .form-section-title {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   color: #191f28;
   text-align: center;
-  margin: 24px 0 16px;
+  margin: 60px 0 40px;
 }
 
 .form-section-title:first-child {
@@ -747,28 +875,68 @@ a {
 
 .pet-type-btn {
   background: #f6f9fe;
-  border: 2px solid transparent;
+  border: none;
   border-radius: 8px;
   padding: 16px 12px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: filter 0.3s;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.pet-type-btn.active {
-  border-color: #0036e5;
+.pet-type-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 0;
+  background: linear-gradient(144.12deg, #A0A0A0 -2.46%, #323232 105.84%);
+}
+
+.pet-type-toggle.selected .pet-type-btn::before {
+  opacity: 1;
+}
+
+.pet-type-toggle.selected .pet-type-btn.active::before {
+  background: linear-gradient(144.12deg, #00BBFF -2.46%, #0036E5 105.84%);
+}
+
+.pet-type-btn img,
+.pet-type-btn span {
+  position: relative;
+  z-index: 1;
 }
 
 .pet-type-btn img {
   width: 80px;
-  height: 80px;
-  margin: 0 auto 8px;
+  margin: 8px auto 0;
   object-fit: contain;
 }
 
 .pet-type-btn span {
   font-size: 18px;
   font-weight: 700;
+}
+
+/* 선택 후 스타일 */
+.pet-type-toggle.selected .pet-type-btn {
+  filter: grayscale(100%);
+}
+
+.pet-type-toggle.selected .pet-type-btn span {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background: none;
+}
+
+.pet-type-toggle.selected .pet-type-btn.active {
+  filter: none;
 }
 
 /* Form Inputs */
@@ -780,16 +948,15 @@ a {
   display: block;
   font-size: 14px;
   color: #868a92;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .form-group input {
   width: 100%;
-  height: 40px;
   background: #f6f9fe;
   border: none;
   border-radius: 8px;
-  padding: 0 12px;
+  padding: 12px 10px;
   font-size: 16px;
   font-weight: 700;
   color: #191f28;
@@ -798,12 +965,35 @@ a {
 }
 
 .form-group input::placeholder {
-  color: #868a92;
+  color: #c8ccd2;
   font-weight: 700;
 }
 
 .form-group input:focus {
-  box-shadow: 0 0 0 2px #0036e5;
+  border-bottom-color: #0036e5;
+}
+
+.form-group select {
+  width: 100%;
+  background: #f6f9fe;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #c8ccd2;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23868a92' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.form-group select.selected {
+  color: #191f28;
+  opacity: 1;
 }
 
 .form-row {
@@ -850,7 +1040,7 @@ a {
   flex: 1;
 }
 
-.agreement-item input[type="checkbox"] {
+.agreement-section input[type="checkbox"] {
   width: 16px;
   height: 16px;
   accent-color: #0036e5;
@@ -861,6 +1051,19 @@ a {
   font-size: 12px;
   color: #919191;
   flex-shrink: 0;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+/* Help Text */
+.form-help-text {
+  font-size: 12px;
+  color: #e53e3e;
+  margin-top: 4px;
 }
 
 /* Submit Button */
@@ -901,11 +1104,91 @@ a {
   transform: translateY(0);
 }
 
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 388px;
+  width: 92%;
+  max-height: 85dvh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e8ecf0;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #191f28;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #919191;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 16px;
+  font-size: 12px;
+  color: #191f28;
+  line-height: 1.8;
+  word-break: keep-all;
+}
+
+.modal-body h4 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.modal-body p {
+  margin-bottom: 4px;
+}
+
+.modal-company {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e8ecf0;
+  color: #919191;
+  font-size: 11px;
+}
+
 /* Footer */
 .footer {
-  padding: 24px 10px 40px;
+  padding: 24px 16px 40px;
   font-size: 10px;
   color: #919191;
   line-height: 1.6;
   border-top: 1px solid #e8ecf0;
+  word-break: keep-all;
 }
