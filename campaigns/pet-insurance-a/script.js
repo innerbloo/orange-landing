@@ -93,6 +93,7 @@ form.addEventListener('submit', async (e) => {
             petType = '';
             document.querySelectorAll('.pet-type-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.pet-type-toggle').classList.remove('selected');
+            document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
             submitBtn.disabled = true;
         } else {
             showMessage(result.error || '오류가 발생했습니다.', 'error');
