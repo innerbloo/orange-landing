@@ -22,7 +22,33 @@
   <link rel="dns-prefetch" href="https://planetdb.co.kr">
   <link rel="preload" as="image" href="assets/illust_cat-dog-crying-sad.webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/logo.svg">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    @font-face{font-family:'Pretendard Variable';font-display:swap;src:local('Pretendard Variable')}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Pretendard Variable',-apple-system,sans-serif;color:#191f28;background:#fff;max-width:420px;margin:0 auto;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    img{max-width:100%;height:auto;display:block}
+    a{text-decoration:none;color:inherit}
+    .gradient-text{background:linear-gradient(to right,#00bbff,#0036e5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .header{padding:22px 18px 30px}
+    .logo{width:84px;height:29px}
+    .section-01{text-align:center;padding:0 16px}
+    .hero-subtitle{font-size:16px;font-weight:700;color:#191f28;line-height:1.5}
+    .hero-title{font-size:22px;font-weight:900;margin-bottom:10px}
+    .hero-card{background:#f6f9fe;border-radius:8px;padding:25px 20px 43px}
+    .hero-card-stat{font-size:14px;font-weight:500;color:#191f28;margin-bottom:4px}
+    .hero-card-detail{font-size:16px;font-weight:700;color:#191f28;margin-bottom:4px}
+    .hero-card-detail span{color:#0036E5;font-weight:700}
+    .hero-card-highlight{font-size:30px;font-weight:900}
+    .hero-image-wrap{position:relative;display:flex;justify-content:center;align-items:center;margin:-20px 0 0;padding:0 0 20px}
+    .hero-image{position:relative;z-index:1}
+    .benefit-box{text-align:center}
+    .benefit-badge{width:24px;height:24px;margin:0 auto 20px}
+    .benefit-label{font-size:16px;font-weight:700;color:#191f28;margin-bottom:8px}
+    .benefit-amount{font-size:16px;font-weight:700;color:#191f28;line-height:1.6}
+    .benefit-amount .gradient-text{font-size:22px;font-weight:900}
+  </style>
+  <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 </head>
