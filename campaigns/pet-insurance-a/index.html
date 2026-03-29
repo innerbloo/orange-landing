@@ -319,7 +319,7 @@
 
   <!-- 폼 섹션 -->
   <section class="section-12 fade-up" id="form-section">
-    <form id="landing-form">
+    <form id="landing-form" novalidate>
       <!-- 보호자 정보 -->
       <h3 class="form-section-title">보호자 정보</h3>
       <div class="form-group">
@@ -328,7 +328,7 @@
       </div>
       <div class="form-group">
         <label for="phone">연락처</label>
-        <input type="tel" id="phone" inputmode="numeric" placeholder="010 - 0000 - 0000">
+        <input type="tel" id="phone" inputmode="numeric" pattern="[0-9\-]*" placeholder="010 - 0000 - 0000">
       </div>
       <div class="form-group">
         <label for="guardian-birth">생년월일</label>
@@ -353,7 +353,7 @@
         <div class="form-group half">
           <label for="pet-gender">성별</label>
           <select id="pet-gender">
-            <option value="" disabled selected>선택</option>
+            <option disabled selected>선택</option>
             <option value="남">남</option>
             <option value="여">여</option>
           </select>
@@ -367,7 +367,7 @@
         <div class="form-group half">
           <label for="pet-neutered">중성화 여부</label>
           <select id="pet-neutered">
-            <option value="" disabled selected>선택</option>
+            <option disabled selected>선택</option>
             <option value="중성화 완료">중성화 완료</option>
             <option value="중성화 안함">중성화 안함</option>
           </select>
@@ -400,14 +400,14 @@
             <input type="checkbox" id="privacy" class="agree-item">
             <span>(필수) 개인정보 제3자 제공 동의</span>
           </label>
-          <button type="button" class="more-link" onclick="document.getElementById('modal-privacy').classList.add('active')">더보기</button>
+          <button type="button" class="more-link">더보기</button>
         </div>
         <div class="agreement-item">
           <label>
             <input type="checkbox" id="marketing" class="agree-item">
             <span>(필수) 광고성 정보수신 동의</span>
           </label>
-          <button type="button" class="more-link" onclick="document.getElementById('modal-marketing').classList.add('active')">더보기</button>
+          <button type="button" class="more-link">더보기</button>
         </div>
       </div>
 
@@ -423,11 +423,11 @@
   </main>
 
   <!-- 개인정보 제3자 제공 동의 모달 -->
-  <div class="modal-overlay" id="modal-privacy">
+  <div class="modal-overlay" id="modal-privacy" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-privacy-title">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>개인정보 제3자 제공 동의</h3>
-        <button type="button" class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('active')">&times;</button>
+        <h3 id="modal-privacy-title">개인정보 제3자 제공 동의</h3>
+        <button type="button" class="modal-close" aria-label="닫기">&times;</button>
       </div>
       <div class="modal-body">
         <p>주식회사 오렌지플래닛(이하 "회사")은 펫보험 비교 견적 서비스 제공을 위해 아래와 같이 개인정보를 제3자에게 제공합니다. 내용을 확인하신 후 동의 여부를 결정하여 주시기 바랍니다.</p>
@@ -453,11 +453,11 @@
   </div>
 
   <!-- 광고성 정보수신 동의 모달 -->
-  <div class="modal-overlay" id="modal-marketing">
+  <div class="modal-overlay" id="modal-marketing" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-marketing-title">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>광고성 정보수신 동의</h3>
-        <button type="button" class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('active')">&times;</button>
+        <h3 id="modal-marketing-title">광고성 정보수신 동의</h3>
+        <button type="button" class="modal-close" aria-label="닫기">&times;</button>
       </div>
       <div class="modal-body">
         <p>주식회사 오렌지플래닛(이하 "회사")은 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 제50조에 의거하여 아래와 같이 광고성 정보를 전송하고자 합니다.</p>

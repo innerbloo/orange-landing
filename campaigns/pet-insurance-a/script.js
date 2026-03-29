@@ -342,26 +342,60 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
     });
 });
 
-// 모달 백그라운드 클릭으로 닫기 + 스크롤 방지
+// 모달 열기/닫기 + 접근성 (aria-hidden, 키보드 트랩)
+let lastFocusedEl = null;
+
+function openModal(modal) {
+    lastFocusedEl = document.activeElement;
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    const focusable = modal.querySelector('.modal-close');
+    if (focusable) focusable.focus();
+}
+
+function closeModal(modal) {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocusedEl) lastFocusedEl.focus();
+}
+
 document.querySelectorAll('.modal-overlay').forEach((modal) => {
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
+        if (e.target === modal) closeModal(modal);
+    });
+
+    // 키보드 트랩: Tab 순환 + Escape 닫기
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal(modal);
+            return;
+        }
+        if (e.key !== 'Tab') return;
+        const focusableEls = modal.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+        if (!focusableEls.length) return;
+        const first = focusableEls[0];
+        const last = focusableEls[focusableEls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
         }
     });
 });
 
 document.querySelectorAll('.modal-close').forEach((btn) => {
-    btn.addEventListener('click', () => {
-        btn.closest('.modal-overlay').classList.remove('active');
-        document.body.style.overflow = '';
-    });
+    btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay')));
 });
 
 document.querySelectorAll('.more-link').forEach((link) => {
     link.addEventListener('click', () => {
-        document.body.style.overflow = 'hidden';
+        const modalId = link.closest('.agreement-item').querySelector('.agree-item').id;
+        const modal = document.getElementById(modalId === 'privacy' ? 'modal-privacy' : 'modal-marketing');
+        if (modal) openModal(modal);
     });
 });
 
