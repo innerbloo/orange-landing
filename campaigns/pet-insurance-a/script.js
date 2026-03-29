@@ -79,19 +79,27 @@ form.addEventListener('submit', async (e) => {
             body: JSON.stringify(formData)
         });
 
+        if (!response.ok) {
+            showMessage('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+            return;
+        }
+
         const result = await response.json();
 
         if (result.success) {
             localStorage.setItem(`submitted_${PROJECT}_${phoneValue}`, 'true');
             showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
             form.reset();
+            petType = '';
+            document.querySelectorAll('.pet-type-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.pet-type-toggle').classList.remove('selected');
             submitBtn.disabled = true;
         } else {
             showMessage(result.error || '오류가 발생했습니다.', 'error');
         }
     } catch (error) {
         console.error('제출 오류:', error);
-        showMessage('오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        showMessage('인터넷 연결을 확인해주세요.', 'error');
     } finally {
         setLoadingState(false);
     }
@@ -344,9 +352,11 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 
 // 모달 열기/닫기 + 접근성 (aria-hidden, 키보드 트랩)
 let lastFocusedEl = null;
+let savedOverflow = '';
 
 function openModal(modal) {
     lastFocusedEl = document.activeElement;
+    savedOverflow = document.body.style.overflow;
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -357,7 +367,7 @@ function openModal(modal) {
 function closeModal(modal) {
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    document.body.style.overflow = savedOverflow;
     if (lastFocusedEl) lastFocusedEl.focus();
 }
 
