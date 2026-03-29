@@ -852,7 +852,7 @@ a {
   padding: 16px 12px;
   text-align: center;
   cursor: pointer;
-  transition: filter 0.3s;
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -866,7 +866,7 @@ a {
   inset: 0;
   border-radius: 8px;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
   background: linear-gradient(144.12deg, #A0A0A0 -2.46%, #323232 105.84%);
 }
@@ -1068,7 +1068,7 @@ a {
 .fade-up {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .fade-up.visible {
@@ -1177,7 +1177,7 @@ a {
   max-width: 388px;
   z-index: 50;
   opacity: 0;
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
   background: #0036e5;
   color: #ffffff;
@@ -1203,7 +1203,7 @@ a {
 .cat-card {
   opacity: 0;
   transform: translateX(-20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .checkpoint-card.visible,
@@ -1216,7 +1216,7 @@ a {
 .benefit-card {
   opacity: 0;
   transform: scale(0.9);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .benefit-card.visible {
@@ -1226,24 +1226,22 @@ a {
 
 
 /* 5. 화살표 아이콘 바운스 */
-@keyframes bounce-down {
+@keyframes float-down {
   0%, 100% { transform: translateY(0); }
-  30% { transform: translateY(6px); }
-  60% { transform: translateY(4px); }
+  50% { transform: translateY(5px); }
 }
 
-@keyframes bounce-up {
+@keyframes float-up {
   0%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-6px); }
-  60% { transform: translateY(-4px); }
+  50% { transform: translateY(-5px); }
 }
 
 .section-10.visible .value-card:nth-child(1) .value-card-icon {
-  animation: bounce-down 1.2s ease infinite;
+  animation: float-down 1s ease-in-out infinite;
 }
 
 .section-10.visible .value-card:nth-child(2) .value-card-icon {
-  animation: bounce-up 1.2s ease infinite;
+  animation: float-up 1s ease-in-out infinite;
 }
 
 /* ========== PC 반응형 (768px+) ========== */
