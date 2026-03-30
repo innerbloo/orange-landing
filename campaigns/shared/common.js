@@ -256,8 +256,7 @@ function initFormSubmit() {
 
             if (result.success) {
                 localStorage.setItem(`submitted_${_config.project}_${phoneValue}`, 'true');
-                const name = formData.fields['이름'] || '';
-                alert(`소중한 문의 감사합니다, ${name}님. 빠른 시일 내에 연락드리겠습니다.`);
+                alert('소중한 문의 감사합니다.\n빠른 시일 내에 연락드리겠습니다.');
                 form.reset();
                 resetVerification();
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
