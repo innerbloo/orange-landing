@@ -87,7 +87,7 @@ function initSmsVerification() {
         }
     });
 
-    verifyCodeBtn.addEventListener('click', async () => {
+    async function submitVerifyCode() {
         const phone = phoneInput.value.replace(/-/g, '');
         const code = verifyCodeInput.value.trim();
 
@@ -116,11 +116,24 @@ function initSmsVerification() {
                 phoneInput.readOnly = true;
             } else {
                 showHelpText(verifyCodeInput, result.error || '인증에 실패했습니다.');
+                verifyCodeInput.value = '';
+                verifyCodeInput.focus();
             }
         } catch {
             showHelpText(verifyCodeInput, '인증 확인 중 오류가 발생했습니다.');
+            verifyCodeInput.value = '';
+            verifyCodeInput.focus();
         } finally {
             if (!phoneVerified) verifyCodeBtn.disabled = false;
+        }
+    }
+
+    verifyCodeBtn.addEventListener('click', submitVerifyCode);
+
+    // 6자리 입력 완료 시 자동 검증
+    verifyCodeInput.addEventListener('input', () => {
+        if (verifyCodeInput.value.trim().length === 6) {
+            submitVerifyCode();
         }
     });
 
