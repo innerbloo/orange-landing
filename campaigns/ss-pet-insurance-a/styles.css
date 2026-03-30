@@ -882,7 +882,7 @@ a {
 .verify-btn {
   flex-shrink: 0;
   width: 80px;
-  height: 44px;
+  padding: 12px 0;
   background: var(--color-bg);
   color: var(--color-primary);
   font-size: 14px;
@@ -892,10 +892,6 @@ a {
   cursor: pointer;
 }
 
-.verify-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
 
 .verify-timer {
   font-size: 13px;
@@ -903,9 +899,6 @@ a {
   margin-top: 4px;
 }
 
-.verify-code-group input {
-  letter-spacing: 4px;
-}
 
 /* Form Inputs */
 .form-group {

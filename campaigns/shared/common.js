@@ -129,12 +129,12 @@ function initSmsVerification() {
             phoneVerified = false;
             phoneInput.readOnly = false;
             sendCodeBtn.textContent = '인증요청';
-            sendCodeBtn.disabled = false;
             verifyCodeGroup.style.display = 'none';
             verifyCodeInput.value = '';
             clearInterval(verifyTimer);
             verifyTimerEl.textContent = '';
         }
+
     });
 }
 

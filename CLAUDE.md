@@ -194,6 +194,101 @@ initLanding({
 - `NHN_APP_KEY` — NHN Cloud SMS 앱키
 - `NHN_SECRET_KEY` — NHN Cloud SMS 시크릿키
 
+## 랜딩페이지 프론트엔드 규칙
+
+새 랜딩 제작 시 아래 규칙을 반드시 따른다. (ss-pet-insurance-a 기준)
+
+### 1. FCP/LCP 최적화
+
+- **크리티컬 CSS**: `<head>` 안에 `<style>` 태그로 ATF(Above The Fold) 스타일 인라인. 히어로 섹션 + CTA까지 포함
+- **메인 CSS 지연 로드**: `<link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">`  + `<noscript>` 폴백
+- **웹폰트 지연 로드**: 외부 폰트도 동일한 `media="print" onload` 패턴. `@font-face`에 `font-display: swap` 필수
+- **히어로 이미지**: `fetchpriority="high"` + `<link rel="preload" as="image" fetchpriority="high">` 로 LCP 최적화
+- **로고**: `<link rel="preload" as="image">`로 프리로드
+- **스크립트**: `defer` 필수. `async` 사용 금지 (실행 순서 보장)
+- **외부 리소스**: `<link rel="preconnect">` + `<link rel="dns-prefetch">`
+
+### 2. 이미지
+
+- **포맷**: WebP 필수 (일러스트, 아이콘 모두)
+- **width/height 속성**: 모든 `<img>`에 명시 (CLS 방지)
+- **lazy loading**: ATF 이미지 제외, 나머지 모두 `loading="lazy"`
+- **장식 이미지**: `alt=""` (빈 alt). 의미 있는 이미지만 alt 텍스트 작성
+
+### 3. CSS 패턴
+
+- **CSS 변수**: 브랜드 색상은 `shared/{광고주}.css`의 `:root` 변수 사용. `styles.css`에 하드코딩 금지
+- **모바일 퍼스트**: `max-width: 430px` 단일 컬럼 레이아웃. 미디어쿼리 불필요
+- **트랜지션**: `cubic-bezier(0.4, 0, 0.2, 1)` 또는 `cubic-bezier(0.33, 1, 0.68, 1)` 통일
+- **그라데이션 텍스트**: `.gradient-text` 유틸리티 클래스 사용 (`background-clip: text`)
+
+### 4. IntersectionObserver 애니메이션 (common.js 공통)
+
+- **fade-up**: `.fade-up` 클래스 → 뷰포트 진입 시 `.visible` 추가. `opacity: 0 → 1`, `translateY(40px → 0)`
+- **count-up**: `.count-up` + `data-target`, `data-suffix` → 숫자 카운트 애니메이션 (ease-out cubic, 1.5초)
+- **stagger**: `[data-stagger]` 자식 요소 순차 등장. 부모에 observer 연결, 자식에 `transitionDelay` 자동 적용
+- **sticky CTA**: section-01 통과 후 표시, section-12(폼) 도달 시 숨김
+
+### 5. HTML / 접근성
+
+- **시맨틱 태그**: `<header>`, `<main>`, `<section>`, `<footer>` 사용. `<div>` 남용 금지
+- **`role` 속성**: header에 `role="banner"`, 모달에 `role="dialog"` + `aria-modal="true"`
+- **모달 접근성**: `aria-hidden`, `aria-labelledby` 연결. 키보드 트랩 (Tab 순환 + Escape 닫기). 열 때 `body overflow: hidden`, 닫을 때 포커스 복원
+- **폼 라벨**: 모든 input/select에 `<label for="id">` 연결
+- **`novalidate`**: `<form novalidate>`로 브라우저 기본 검증 비활성화, JS로 커스텀 검증
+- **구조화 데이터**: `<script type="application/ld+json">` (WebPage + Organization)
+
+### 6. 폼 UX (common.js 공통)
+
+- **자동 포맷**: 연락처 하이픈 자동 삽입, 생년월일 `yyyy.mm.dd` 자동 변환 (6자리 입력 시 연도 추론)
+- **헬프텍스트**: 검증 실패 시 해당 필드 아래 `.form-help-text` 표시 + 해당 필드로 스크롤
+- **로딩 상태**: 제출 버튼 텍스트 → "처리중..." 전환, 버튼 비활성화
+- **중복 제출 방지**: localStorage + D1 이중 체크
+- **select 스타일**: 값 선택 전 placeholder 색상, 선택 후 `.selected` 클래스로 텍스트 색상 변경
+
+### 7. 동적 요소 / 인터랙션 패턴
+
+- **CTA 버튼 터치 피드백**: `:active` 시 `transform: scale(0.97)` + `opacity: 0.9`
+- **플로팅 CTA**: `position: fixed` + `env(safe-area-inset-bottom)` (노치 대응). 초기 `opacity: 0` + `pointer-events: none` → `.show` 시 활성화. `box-shadow`로 떠있는 느낌
+- **카드 슬라이드**: 좌측에서 진입 (`translateX(-20px) → 0`). stagger로 순차 등장
+- **카드 스케일인**: `scale(0.9) → scale(1)`. 가입조건 카드에 사용
+- **아이콘 플로팅**: `@keyframes float-down/float-up` 으로 무한 바운스 (뷰포트 진입 시 시작)
+- **모달 트랜지션**: 오버레이 `background rgba 0 → 0.4`, 컨텐츠 `scale(0.95) → 1` + `opacity 0 → 1`
+- **초기 상태 숨김**: 동적 요소(모달, 스티키, 애니메이션 카드)는 CSS에서 `opacity: 0` + `pointer-events: none`으로 초기 숨김. JS가 로드되기 전 FOUC 방지
+
+### 8. 레이아웃 패턴
+
+- **모바일 전용**: `body max-width: 430px; margin: 0 auto` — 데스크톱에서도 모바일 뷰 유지
+- **섹션 패딩**: 좌우 `16px` 통일. 섹션 간 간격은 `padding-top/bottom`으로 조절
+- **2단 그리드**: `grid-template-columns: 1fr 1fr` + `gap: 10px` (가치 카드, 폼 row, 펫타입 토글)
+- **overflow: hidden**: 애니메이션 있는 섹션에 적용 (슬라이드 시 가로 스크롤 방지)
+- **모달 높이**: `max-height: 85dvh` (동적 뷰포트 단위) + 헤더 `position: sticky`로 고정
+
+### 9. SEO
+
+- **메타 태그**: title, description, canonical, robots
+- **Open Graph**: og:title, og:description, og:image, og:url, og:type, og:locale
+- **카카오톡**: kakao:title, kakao:description, kakao:image
+- **구조화 데이터**: JSON-LD (`WebPage` + `Organization` + `ContactPoint` + `PostalAddress`)
+- **시맨틱 HTML**: `<h1>` 1개, `<h2>` 섹션별, `<h3>` 폼 그룹별. 건너뛰기 금지
+
+### 10. 기타
+
+- **select 네이티브 화살표 제거**: `appearance: none` + SVG 배경 이미지로 커스텀 화살표
+- **input focus 스타일**: `border-color` 변경 + `background` 변경 (muted → white)
+- **체크박스 터치 피드백**: `:active` 시 `transform: scale(0.85)`
+- **`accent-color`**: 체크박스에 브랜드 색상 적용
+- **word-break**: 모달, 푸터 등 긴 텍스트에 `word-break: keep-all` (한글 단어 단위 줄바꿈)
+
+### 11. 크리티컬 CSS 동기화 규칙
+
+`styles.css`에서 ATF 관련 스타일을 변경하면, `index.html`의 인라인 `<style>` 블록도 **반드시 동일하게 수정**할 것. 크리티컬 CSS는 다음 범위를 포함:
+- 리셋/베이스 (`*`, `body`, `img`, `a`)
+- 그라데이션 텍스트 (`.gradient-text`)
+- 헤더 + 히어로 섹션 (`.header` ~ `.hero-*`, `.benefit-*`)
+- CTA 버튼 (`.section-02`, `.cta-button`)
+- 모달/스티키 초기 상태 (`.modal-overlay`, `.sticky-cta` — `opacity:0` 으로 FOUC 방지)
+
 ## 무료 티어 한도
 
 - Cloudflare Workers: 일 100,000 요청
