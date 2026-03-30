@@ -55,6 +55,8 @@ initLanding({
             return false;
         }
 
+        if (!validatePhone(fields)) return false;
+
         if (!fields['보호자생년월일']) {
             showHelpText(document.getElementById('guardian-birth'), '보호자 생년월일을 입력해주세요.');
             document.getElementById('guardian-birth').focus();

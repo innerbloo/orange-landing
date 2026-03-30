@@ -879,6 +879,11 @@ a {
   flex: 1;
 }
 
+.phone-verify-row input[readonly] {
+  background: #eee;
+  color: var(--color-text-sub);
+}
+
 .verify-btn {
   flex-shrink: 0;
   width: 80px;
@@ -892,6 +897,11 @@ a {
   cursor: pointer;
 }
 
+.verify-btn .cooldown-text {
+  font-size: 11px;
+  font-weight: 400;
+}
+
 .verify-btn:disabled {
   background: var(--color-text-sub);
   color: var(--color-bg);
@@ -899,6 +909,18 @@ a {
   cursor: default;
 }
 
+.verify-btn.verified {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+
+#verify-code-btn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-bg);
+}
 
 .verify-timer {
   font-size: 13px;
@@ -941,6 +963,16 @@ a {
 .form-group input:focus {
   border-color: var(--color-primary);
   background: var(--color-bg);
+}
+
+.form-group input[readonly] {
+  background: #eee;
+  color: var(--color-text-sub);
+}
+
+.form-group input[readonly]:focus {
+  border-color: transparent;
+  background: #eee;
 }
 
 .form-group select {
@@ -1051,6 +1083,12 @@ a {
 .submit-button {
   margin-top: 8px;
   width: 100%;
+}
+
+.submit-button:disabled {
+  background: var(--color-text-sub);
+  border-color: var(--color-text-sub);
+  cursor: default;
 }
 
 /* Form Message */

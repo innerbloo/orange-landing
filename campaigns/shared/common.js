@@ -14,12 +14,13 @@
 const API_BASE = 'https://planetdb.co.kr/api';
 
 // ── DOM 요소 ──
-let form, submitBtn, btnText, btnLoading, formMessage, phoneInput;
+let form, submitBtn, formMessage, phoneInput;
 let sendCodeBtn, verifyCodeGroup, verifyCodeInput, verifyCodeBtn, verifyTimerEl;
 
 // ── 상태 ──
 let phoneVerified = false;
 let verifyTimer = null;
+let cooldownTimer = null;
 let _config = null;
 
 // ── 초기화 ──
@@ -28,8 +29,7 @@ function initLanding(config) {
 
     form = document.getElementById('landing-form');
     submitBtn = document.getElementById('submit-btn');
-    btnText = submitBtn.querySelector('.btn-text');
-    btnLoading = submitBtn.querySelector('.btn-loading');
+
     formMessage = document.getElementById('form-message');
     phoneInput = document.getElementById('phone');
     sendCodeBtn = document.getElementById('send-code-btn');
@@ -53,6 +53,13 @@ function initLanding(config) {
 
 // ── SMS 인증 ──
 function initSmsVerification() {
+    phoneInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (!sendCodeBtn.disabled) sendCodeBtn.click();
+        }
+    });
+
     sendCodeBtn.addEventListener('click', async () => {
         const phone = phoneInput.value.replace(/-/g, '');
         if (!/^010[2-9]\d{7}$/.test(phone)) {
@@ -62,7 +69,8 @@ function initSmsVerification() {
         }
 
         sendCodeBtn.disabled = true;
-        sendCodeBtn.textContent = '발송중';
+        verifyCodeGroup.style.display = '';
+        verifyCodeInput.focus();
 
         try {
             const res = await fetch(`${API_BASE}/send-code`, {
@@ -73,16 +81,29 @@ function initSmsVerification() {
             const result = await res.json();
 
             if (result.success) {
-                verifyCodeGroup.style.display = '';
-                verifyCodeInput.focus();
                 startTimer(180);
                 sendCodeBtn.textContent = '재전송';
+                // 재전송 쿨타임 30초
+                let cooldown = 30;
+                sendCodeBtn.innerHTML = `재전송<span class="cooldown-text">(${cooldown}초)</span>`;
+                cooldownTimer = setInterval(() => {
+                    cooldown--;
+                    sendCodeBtn.innerHTML = `재전송<span class="cooldown-text">(${cooldown}초)</span>`;
+                    if (cooldown <= 0) {
+                        clearInterval(cooldownTimer);
+                        cooldownTimer = null;
+                        sendCodeBtn.textContent = '재전송';
+                        sendCodeBtn.disabled = false;
+                    }
+                }, 1000);
             } else {
+                verifyCodeGroup.style.display = 'none';
                 showHelpText(phoneInput, result.error || 'SMS 발송에 실패했습니다.');
+                sendCodeBtn.disabled = false;
             }
         } catch {
+            verifyCodeGroup.style.display = 'none';
             showHelpText(phoneInput, 'SMS 발송 중 오류가 발생했습니다.');
-        } finally {
             sendCodeBtn.disabled = false;
         }
     });
@@ -114,10 +135,12 @@ function initSmsVerification() {
             if (result.success) {
                 phoneVerified = true;
                 clearInterval(verifyTimer);
+                if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
                 verifyTimerEl.textContent = '';
                 verifyCodeGroup.style.display = 'none';
                 sendCodeBtn.textContent = '인증완료';
                 sendCodeBtn.disabled = true;
+                sendCodeBtn.classList.add('verified');
                 phoneInput.readOnly = true;
             } else {
                 showHelpText(verifyCodeInput, result.error || '인증에 실패했습니다.');
@@ -199,12 +222,6 @@ function initFormSubmit() {
         e.preventDefault();
         if (submitBtn.disabled) return;
 
-        const phoneValue = phoneInput.value.replace(/-/g, '');
-        if (localStorage.getItem(`submitted_${_config.project}_${phoneValue}`)) {
-            showMessage('이미 신청하셨습니다.', 'error');
-            return;
-        }
-
         const formData = {
             project: _config.project,
             fields: _config.buildFields(),
@@ -212,13 +229,16 @@ function initFormSubmit() {
         if (_config.sheetId) formData.sheetId = _config.sheetId;
         if (_config.tabId != null) formData.tabId = _config.tabId;
 
-        // 공통 검증: 연락처 + 인증
-        if (!validatePhone(formData.fields)) return;
-        // 랜딩별 검증
+        // 랜딩별 검증 (이름 → 연락처+인증 → 나머지 필드)
         if (!_config.validateFields(formData.fields)) return;
 
+        const phoneValue = phoneInput.value.replace(/-/g, '');
+        if (localStorage.getItem(`submitted_${_config.project}_${phoneValue}`)) {
+            alert('이미 신청하셨습니다.');
+            return;
+        }
+
         setLoadingState(true);
-        hideMessage();
 
         try {
             const response = await fetch(`${API_BASE}/submit`, {
@@ -228,7 +248,7 @@ function initFormSubmit() {
             });
 
             if (!response.ok) {
-                showMessage('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+                alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
                 return;
             }
 
@@ -236,18 +256,18 @@ function initFormSubmit() {
 
             if (result.success) {
                 localStorage.setItem(`submitted_${_config.project}_${phoneValue}`, 'true');
-                showMessage('신청이 완료되었습니다. 감사합니다!', 'success');
+                alert('신청이 완료되었습니다. 감사합니다!');
                 form.reset();
                 resetVerification();
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
                 submitBtn.disabled = true;
                 if (_config.onReset) _config.onReset();
             } else {
-                showMessage(result.error || '오류가 발생했습니다.', 'error');
+                alert(result.error || '오류가 발생했습니다.');
             }
         } catch (error) {
             console.error('제출 오류:', error);
-            showMessage('인터넷 연결을 확인해주세요.', 'error');
+            alert('인터넷 연결을 확인해주세요.');
         } finally {
             setLoadingState(false);
         }
@@ -259,9 +279,11 @@ function resetVerification() {
     phoneInput.readOnly = false;
     sendCodeBtn.textContent = '인증요청';
     sendCodeBtn.disabled = false;
+    sendCodeBtn.classList.remove('verified');
     verifyCodeGroup.style.display = 'none';
     verifyCodeInput.value = '';
     clearInterval(verifyTimer);
+    if (cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
     verifyTimerEl.textContent = '';
 }
 
@@ -328,8 +350,6 @@ function initHelpTextClear() {
 // ── 로딩/메시지 ──
 function setLoadingState(isLoading) {
     submitBtn.disabled = isLoading;
-    btnText.hidden = isLoading;
-    btnLoading.hidden = !isLoading;
 }
 
 function showMessage(text, type) {
