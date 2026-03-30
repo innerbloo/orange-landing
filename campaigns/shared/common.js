@@ -87,7 +87,11 @@ function initSmsVerification() {
         }
     });
 
+    let verifying = false;
+
     async function submitVerifyCode() {
+        if (verifying) return;
+
         const phone = phoneInput.value.replace(/-/g, '');
         const code = verifyCodeInput.value.trim();
 
@@ -96,6 +100,7 @@ function initSmsVerification() {
             return;
         }
 
+        verifying = true;
         verifyCodeBtn.disabled = true;
 
         try {
@@ -124,6 +129,7 @@ function initSmsVerification() {
             verifyCodeInput.value = '';
             verifyCodeInput.focus();
         } finally {
+            verifying = false;
             if (!phoneVerified) verifyCodeBtn.disabled = false;
         }
     }

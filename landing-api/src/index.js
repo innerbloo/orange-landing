@@ -154,7 +154,15 @@ async function handleSubmit(request, env, origin) {
       }
     }
 
-    // 8. 성공 응답
+    // 8. 인증 레코드 정리 (실패해도 무시)
+    if (phone) {
+      try {
+        await env.DB.prepare('DELETE FROM verification_codes WHERE phone = ?')
+          .bind(phone.replace(/-/g, '')).run();
+      } catch (_) {}
+    }
+
+    // 9. 성공 응답
     return jsonResponse({ success: true, message: '신청이 완료되었습니다.' });
   } catch (error) {
     console.error('제출 처리 오류:', error);
