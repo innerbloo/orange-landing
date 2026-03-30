@@ -256,7 +256,8 @@ function initFormSubmit() {
 
             if (result.success) {
                 localStorage.setItem(`submitted_${_config.project}_${phoneValue}`, 'true');
-                alert('신청이 완료되었습니다. 감사합니다!');
+                const name = formData.fields['이름'] || '';
+                alert(`소중한 문의 감사합니다, ${name}님. 빠른 시일 내에 연락드리겠습니다.`);
                 form.reset();
                 resetVerification();
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
@@ -372,7 +373,7 @@ function initAnimations() {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         },
-        { threshold: 0.1 }
+        { threshold: 0.2, rootMargin: '0px 0px -60px 0px' }
     );
     document.querySelectorAll('.fade-up').forEach((el) => fadeObserver.observe(el));
 
@@ -397,7 +398,7 @@ function initAnimations() {
             requestAnimationFrame(update);
             countObserver.unobserve(el);
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.5, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.count-up').forEach((el) => countObserver.observe(el));
 
     // stagger (순차 애니메이션)
@@ -412,7 +413,7 @@ function initAnimations() {
             });
             staggerObserver.unobserve(parent);
         });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.25, rootMargin: '0px 0px -60px 0px' });
 
     document.querySelectorAll('.checkpoint-card').forEach((el) => el.dataset.stagger = '');
     const checkpointList = document.querySelector('.checkpoint-list');
