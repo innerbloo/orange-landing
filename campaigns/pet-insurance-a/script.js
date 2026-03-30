@@ -16,7 +16,6 @@ document.querySelectorAll('.pet-type-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.pet-type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelector('.pet-type-toggle').classList.add('selected');
         petType = btn.dataset.type;
     });
 });
@@ -92,7 +91,6 @@ form.addEventListener('submit', async (e) => {
             form.reset();
             petType = '';
             document.querySelectorAll('.pet-type-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.pet-type-toggle').classList.remove('selected');
             document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
             submitBtn.disabled = true;
         } else {

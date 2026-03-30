@@ -79,14 +79,14 @@ a {
 }
 
 .hero-card-stat {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #191f28;
   margin-bottom: 4px;
 }
 
 .hero-card-detail {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: #191f28;
   margin-bottom: 4px;
@@ -98,7 +98,7 @@ a {
 }
 
 .hero-card-highlight {
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 900;
 }
 
@@ -138,6 +138,7 @@ a {
   font-weight: 700;
   color: #191f28;
   line-height: 1.6;
+  margin-bottom: 2px;
 }
 
 .benefit-amount .gradient-text {
@@ -842,42 +843,15 @@ a {
 
 .pet-type-btn {
   background: #f6f9fe;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 12px;
   padding: 16px 12px;
   text-align: center;
   cursor: pointer;
-  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.pet-type-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 8px;
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 0;
-  background: linear-gradient(144.12deg, #A0A0A0 -2.46%, #323232 105.84%);
-}
-
-.pet-type-toggle.selected .pet-type-btn::before {
-  opacity: 1;
-}
-
-.pet-type-toggle.selected .pet-type-btn.active::before {
-  background: linear-gradient(144.12deg, #00BBFF -2.46%, #0036E5 105.84%);
-}
-
-.pet-type-btn img,
-.pet-type-btn span {
-  position: relative;
-  z-index: 1;
 }
 
 .pet-type-btn img {
@@ -891,19 +865,8 @@ a {
   font-weight: 700;
 }
 
-/* 선택 후 스타일 */
-.pet-type-toggle.selected .pet-type-btn {
-  filter: grayscale(100%);
-}
-
-.pet-type-toggle.selected .pet-type-btn span {
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  background: none;
-}
-
-.pet-type-toggle.selected .pet-type-btn.active {
-  filter: none;
+.pet-type-btn.active {
+  border-color: #0066FF;
 }
 
 /* Form Inputs */
