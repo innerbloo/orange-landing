@@ -1,0 +1,20 @@
+:root {
+  /* 삼성화재 브랜드 */
+  --color-primary: #0036e5;
+  --color-primary-light: #00bbff;
+  --color-primary-gradient: linear-gradient(144.12deg, #00BBFF -2.46%, #0036E5 105.84%);
+
+  /* 텍스트 */
+  --color-text: #191f28;
+  --color-text-sub: #919191;
+  --color-text-caption: #868a92;
+
+  /* 배경 */
+  --color-bg: #ffffff;
+  --color-bg-muted: #f6f9fe;
+  --color-bg-border: #e8ecf0;
+
+  /* 상태 */
+  --color-error: #e5003a;
+  --color-success: #2e7d32;
+}

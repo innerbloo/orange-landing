@@ -14,8 +14,8 @@
 
 body {
   font-family: 'Pretendard Variable', -apple-system, sans-serif;
-  color: #191f28;
-  background: #ffffff;
+  color: var(--color-text);
+  background: var(--color-bg);
   max-width: 430px;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
@@ -35,7 +35,7 @@ a {
 
 /* Utility */
 .gradient-text {
-  background: linear-gradient(to right, #00bbff, #0036e5);
+  background: linear-gradient(to right, var(--color-primary-light), var(--color-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -60,7 +60,7 @@ a {
 .hero-subtitle {
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.5;
 }
 
@@ -73,7 +73,7 @@ a {
 
 
 .hero-card {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 25px 20px 43px;
 }
@@ -81,19 +81,19 @@ a {
 .hero-card-stat {
   font-size: 16px;
   font-weight: 500;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
 .hero-card-detail {
   font-size: 18px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
 .hero-card-detail span {
-  color: #0036E5;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -129,14 +129,14 @@ a {
 .benefit-label {
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 8px;
 }
 
 .benefit-amount {
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.6;
   margin-bottom: 2px;
 }
@@ -155,8 +155,8 @@ a {
   display: block;
   width: 100%;
   height: 42px;
-  background: #0036e5;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-bg);
   font-size: 16px;
   font-weight: 700;
   border: none;
@@ -174,7 +174,7 @@ a {
 
 .cta-disclaimer {
   font-size: 12px;
-  color: #919191;
+  color: var(--color-text-sub);
   text-align: center;
   margin-top: 15px;
 }
@@ -182,8 +182,8 @@ a {
 /* Badge */
 .badge {
   display: inline-block;
-  background: #0036e5;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-bg);
   font-size: 10px;
   font-weight: 700;
   padding: 3px 10px;
@@ -205,7 +205,7 @@ a {
 }
 
 .section-03 .info-card-desc span {
-  color: #0036e5;
+  color: var(--color-primary);
 }
 
 .section-03 .info-card-sub-desc {
@@ -235,14 +235,14 @@ a {
 .section-title {
   font-size: 22px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   margin: 10px 0;
 }
 
 
 .check-desc {
   font-size: 14px;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 20px;
 }
 
@@ -294,7 +294,7 @@ a {
 .check-bottom-text {
   font-size: 14px;
   font-weight: 500;
-  color: #191f28;
+  color: var(--color-text);
   margin-top: 14px;
 }
 
@@ -322,26 +322,26 @@ a {
 .check02-subtitle {
   font-size: 14px;
   font-weight: 400;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 16px;
   line-height: 18px;
 }
 
 .check02-subtitle-bold {
   font-weight: 700;
-  color: #0036e5;
+  color: var(--color-primary);
 }
 
 
 /* 단색 파란 볼드 */
 .text-blue-bold {
-  color: #0036e5;
+  color: var(--color-primary);
   font-weight: 800;
 }
 
 /* Info Card */
 .info-card {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 25px 24px;
   text-align: left;
@@ -350,13 +350,13 @@ a {
 .info-card-title {
   font-size: 14px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 8px;
 }
 
 .info-card-desc {
   font-size: 12px;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.6;
 }
 
@@ -383,7 +383,7 @@ a {
   gap: 8px;
   font-size: 12px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   padding: 6px 0;
 }
 
@@ -403,7 +403,7 @@ a {
 .checkpoint-card {
   display: flex;
   align-items: center;
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 12px 16px;
   gap: 12px;
@@ -418,7 +418,7 @@ a {
 .checkpoint-text {
   font-size: 14px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   flex: 1;
   text-align: left;
 }
@@ -437,7 +437,7 @@ a {
 
 /* section-06: 가입조건 및 보장 */
 .section-06 {
-  background: #0036e5;
+  background: var(--color-primary);
   padding: 40px 16px;
   text-align: center;
 }
@@ -445,7 +445,7 @@ a {
 .blue-title {
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-bg);
   margin-bottom: 20px;
 }
 
@@ -471,7 +471,7 @@ a {
 }
 
 .benefit-card {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 10px 12px;
   text-align: center;
@@ -515,20 +515,20 @@ a {
 .benefit-card-desc {
   font-size: 12px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.4;
 }
 
 .benefit-card-sub {
   font-size: 12px;
   font-weight: 400;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.4;
 }
 
 .blue-disclaimer {
   font-size: 12px;
-  color: #ffffff;
+  color: var(--color-bg);
   opacity: 0.8;
 }
 
@@ -548,7 +548,7 @@ a {
 .cat-card {
   display: flex;
   align-items: center;
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 12px 10px;
   gap: 12px;
@@ -568,30 +568,30 @@ a {
 .cat-card-title {
   font-size: 12px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
 }
 
 .cat-card-desc {
   font-size: 12px;
   font-weight: 500;
-  color: #191f28;
+  color: var(--color-text);
 }
 
 .cat-card-tag {
   font-size: 10px;
   font-weight: 400;
-  color: #919191;
+  color: var(--color-text-sub);
 }
 
 .section-disclaimer {
   font-size: 12px;
-  color: #919191;
+  color: var(--color-text-sub);
   margin-top: 8px;
 }
 
 /* section-08: 보험사별 비교 테이블 */
 .section-08 {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   padding: 30px 16px;
   text-align: center;
 }
@@ -606,17 +606,17 @@ a {
   width: 100%;
   border-collapse: collapse;
   font-size: 10px;
-  background: #ffffff;
+  background: var(--color-bg);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .compare-table thead tr {
-  background: #0036e5;
+  background: var(--color-primary);
 }
 
 .compare-table th {
-  color: #ffffff;
+  color: var(--color-bg);
   font-size: 12px;
   font-weight: 700;
   padding: 10px 8px;
@@ -628,22 +628,22 @@ a {
   height: 50px;
   text-align: center;
   font-size: 10px;
-  color: #191f28;
-  border-bottom: 1px solid #919191;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-text-sub);
 }
 
 .compare-table .row-label {
   font-size: 10px;
   font-weight: 700;
   text-align: center;
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   width: 70px;
 }
 
 .compare-table .row-label-sub {
   font-weight: 700;
   font-size: 10px;
-  color: #191f28;
+  color: var(--color-text);
 }
 
 .compare-table .td-bold {
@@ -652,7 +652,7 @@ a {
 }
 
 .compare-table .td-highlight {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
 }
 
 /* section-09: 어려우신가요 */
@@ -665,7 +665,7 @@ a {
 .help-text {
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.5;
 }
 
@@ -696,7 +696,7 @@ a {
 .help-highlight {
   font-size: 18px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.2;
 }
 
@@ -719,7 +719,7 @@ a {
 }
 
 .value-card {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 16px 12px;
   text-align: center;
@@ -748,7 +748,7 @@ a {
 .value-desc {
   font-size: 14px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
 }
 
 /* section-11: 맞춤형 플랜 */
@@ -767,7 +767,7 @@ a {
 .plan-text {
   font-size: 18px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.2;
   margin-bottom: 16px;
 }
@@ -780,7 +780,7 @@ a {
 .info-card-title-14 {
   font-size: 14px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
@@ -824,7 +824,7 @@ a {
 .form-section-title {
   font-size: 24px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   text-align: center;
   margin: 60px 0 40px;
 }
@@ -842,7 +842,7 @@ a {
 }
 
 .pet-type-btn {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border: 2px solid transparent;
   border-radius: 12px;
   padding: 16px 12px;
@@ -866,7 +866,45 @@ a {
 }
 
 .pet-type-btn.active {
-  border-color: #0066FF;
+  border-color: var(--color-primary);
+}
+
+/* Phone Verification */
+.phone-verify-row {
+  display: flex;
+  gap: 8px;
+}
+
+.phone-verify-row input {
+  flex: 1;
+}
+
+.verify-btn {
+  flex-shrink: 0;
+  width: 80px;
+  height: 44px;
+  background: var(--color-bg);
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.verify-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.verify-timer {
+  font-size: 13px;
+  color: var(--color-error);
+  margin-top: 4px;
+}
+
+.verify-code-group input {
+  letter-spacing: 4px;
 }
 
 /* Form Inputs */
@@ -877,19 +915,19 @@ a {
 .form-group label {
   display: block;
   font-size: 14px;
-  color: #868a92;
+  color: var(--color-text-caption);
   margin-bottom: 10px;
 }
 
 .form-group input {
   width: 100%;
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border: 1.5px solid transparent;
   border-radius: 8px;
   padding: 12px 10px;
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -901,13 +939,13 @@ a {
 }
 
 .form-group input:focus {
-  border-color: #0036e5;
-  background: #ffffff;
+  border-color: var(--color-primary);
+  background: var(--color-bg);
 }
 
 .form-group select {
   width: 100%;
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border: 1.5px solid transparent;
   border-radius: 8px;
   padding: 12px 10px;
@@ -925,13 +963,13 @@ a {
 }
 
 .form-group select.selected {
-  color: #191f28;
+  color: var(--color-text);
   opacity: 1;
 }
 
 .form-group select:focus {
-  border-color: #0036e5;
-  background-color: #ffffff;
+  border-color: var(--color-primary);
+  background-color: var(--color-bg);
 }
 
 .form-row {
@@ -946,7 +984,7 @@ a {
 }
 
 .agreement-all {
-  background: #f6f9fe;
+  background: var(--color-bg-muted);
   border-radius: 8px;
   padding: 12px 16px;
   margin-bottom: 8px;
@@ -958,7 +996,7 @@ a {
   gap: 8px;
   font-size: 16px;
   font-weight: 500;
-  color: #191f28;
+  color: var(--color-text);
   cursor: pointer;
 }
 
@@ -973,7 +1011,7 @@ a {
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #919191;
+  color: var(--color-text-sub);
   cursor: pointer;
   flex: 1;
 }
@@ -981,7 +1019,7 @@ a {
 .agreement-section input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #0036e5;
+  accent-color: var(--color-primary);
   flex-shrink: 0;
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -992,7 +1030,7 @@ a {
 
 .more-link {
   font-size: 12px;
-  color: #919191;
+  color: var(--color-text-sub);
   flex-shrink: 0;
   text-decoration: underline;
   background: none;
@@ -1066,7 +1104,7 @@ a {
 }
 
 .modal-content {
-  background: #ffffff;
+  background: var(--color-bg);
   border-radius: 16px;
   max-width: 388px;
   width: 92%;
@@ -1087,24 +1125,24 @@ a {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #e8ecf0;
+  border-bottom: 1px solid var(--color-bg-border);
   position: sticky;
   top: 0;
-  background: #ffffff;
+  background: var(--color-bg);
   border-radius: 12px 12px 0 0;
 }
 
 .modal-header h3 {
   font-size: 16px;
   font-weight: 700;
-  color: #191f28;
+  color: var(--color-text);
 }
 
 .modal-close {
   background: none;
   border: none;
   font-size: 24px;
-  color: #919191;
+  color: var(--color-text-sub);
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -1113,7 +1151,7 @@ a {
 .modal-body {
   padding: 16px;
   font-size: 12px;
-  color: #191f28;
+  color: var(--color-text);
   line-height: 1.8;
   word-break: keep-all;
 }
@@ -1132,8 +1170,8 @@ a {
 .modal-company {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #e8ecf0;
-  color: #919191;
+  border-top: 1px solid var(--color-bg-border);
+  color: var(--color-text-sub);
   font-size: 11px;
 }
 
@@ -1141,9 +1179,9 @@ a {
 .footer {
   padding: 24px 16px 40px;
   font-size: 10px;
-  color: #919191;
+  color: var(--color-text-sub);
   line-height: 1.6;
-  border-top: 1px solid #e8ecf0;
+  border-top: 1px solid var(--color-bg-border);
   word-break: keep-all;
 }
 
@@ -1161,8 +1199,8 @@ a {
   opacity: 0;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
-  background: #0036e5;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-bg);
   font-size: 16px;
   font-weight: 700;
   height: 42px;

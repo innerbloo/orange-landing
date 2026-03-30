@@ -6,18 +6,18 @@
   <title>펫보험 비교견적 - 오렌지플래닛</title>
   <meta name="description" content="우리아이 펫보험, 최대 연간 2,000만원 보장! 맞춤형 펫보험 비교 견적을 무료로 받아보세요.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://planetdb.co.kr/pet-insurance-a/">
+  <link rel="canonical" href="https://planetdb.co.kr/ss-pet-insurance-a/">
   <!-- Open Graph -->
   <meta property="og:title" content="펫보험 비교견적 - 오렌지플래닛">
   <meta property="og:description" content="우리아이 펫보험, 최대 연간 2,000만원 보장! 맞춤형 펫보험 비교 견적을 무료로 받아보세요.">
-  <meta property="og:image" content="https://planetdb.co.kr/pet-insurance-a/assets/og.jpg">
-  <meta property="og:url" content="https://planetdb.co.kr/pet-insurance-a/">
+  <meta property="og:image" content="https://planetdb.co.kr/ss-pet-insurance-a/assets/og.jpg">
+  <meta property="og:url" content="https://planetdb.co.kr/ss-pet-insurance-a/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
   <!-- 카카오톡 -->
   <meta property="kakao:title" content="펫보험 비교견적 - 오렌지플래닛">
   <meta property="kakao:description" content="우리아이 펫보험, 최대 연간 2,000만원 보장! 무료 견적 받기">
-  <meta property="kakao:image" content="https://planetdb.co.kr/pet-insurance-a/assets/og.jpg">
+  <meta property="kakao:image" content="https://planetdb.co.kr/ss-pet-insurance-a/assets/og.jpg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://planetdb.co.kr">
   <link rel="preload" as="image" href="assets/illust_cat-dog-crying-sad.webp" fetchpriority="high">
@@ -54,6 +54,7 @@
     .modal-content{opacity:0}
     .sticky-cta{position:fixed;opacity:0;pointer-events:none}
   </style>
+  <link rel="stylesheet" href="../shared/samsung.css">
   <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="styles.css"></noscript>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
@@ -335,11 +336,22 @@
       </div>
       <div class="form-group">
         <label for="phone">연락처</label>
-        <input type="tel" id="phone" inputmode="numeric" pattern="[0-9\-]*" placeholder="010 - 0000 - 0000">
+        <div class="phone-verify-row">
+          <input type="tel" id="phone" inputmode="numeric" pattern="[0-9\-]*" placeholder="010 - 0000 - 0000">
+          <button type="button" id="send-code-btn" class="verify-btn">인증요청</button>
+        </div>
+      </div>
+      <div class="form-group verify-code-group" id="verify-code-group" style="display:none;">
+        <label for="verify-code">인증번호</label>
+        <div class="phone-verify-row">
+          <input type="text" id="verify-code" inputmode="numeric" maxlength="6" placeholder="6자리 입력">
+          <button type="button" id="verify-code-btn" class="verify-btn">확인</button>
+        </div>
+        <p class="verify-timer" id="verify-timer"></p>
       </div>
       <div class="form-group">
         <label for="guardian-birth">생년월일</label>
-        <input type="text" id="guardian-birth" inputmode="numeric" placeholder="1990.01.01">
+        <input type="text" id="guardian-birth" inputmode="numeric" placeholder="1990.01.01" data-format="birth">
       </div>
 
       <!-- 반려동물 정보 -->
@@ -350,7 +362,7 @@
       </div>
       <div class="form-group">
         <label for="pet-birth">생년월일</label>
-        <input type="text" id="pet-birth" inputmode="numeric" placeholder="2026.01.01">
+        <input type="text" id="pet-birth" inputmode="numeric" placeholder="2026.01.01" data-format="birth">
       </div>
       <div class="form-row">
         <div class="form-group half">
@@ -512,7 +524,7 @@
     "@type": "WebPage",
     "name": "펫보험 비교견적",
     "description": "우리아이 펫보험, 최대 연간 2,000만원 보장! 맞춤형 펫보험 비교 견적을 무료로 받아보세요.",
-    "url": "https://planetdb.co.kr/pet-insurance-a/",
+    "url": "https://planetdb.co.kr/ss-pet-insurance-a/",
     "publisher": {
       "@type": "Organization",
       "name": "주식회사 오렌지플래닛",
@@ -533,6 +545,7 @@
     }
   }
   </script>
+  <script src="../shared/common.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
 import { getAccessToken } from './google-auth.js';
 import { appendToSheet } from './sheets-client.js';
 import { isDuplicate, saveToD1, logError, getSubmissions } from './d1-client.js';
+import { sendSmsCode } from './sms-client.js';
 
 // Rate Limiting: IP별 요청 횟수 (메모리 기반, 인스턴스 재시작 시 초기화)
 const rateLimitMap = new Map();
@@ -56,6 +57,14 @@ export default {
 
     if (url.pathname === '/api/submit' && request.method === 'POST') {
       return corsResponse(origin, await handleSubmit(request, env, origin));
+    }
+
+    if (url.pathname === '/api/send-code' && request.method === 'POST') {
+      return corsResponse(origin, await handleSendCode(request, env, origin));
+    }
+
+    if (url.pathname === '/api/verify-code' && request.method === 'POST') {
+      return corsResponse(origin, await handleVerifyCode(request, env, origin));
     }
 
     if (url.pathname === '/api/sync' && request.method === 'POST') {
@@ -114,7 +123,17 @@ async function handleSubmit(request, env, origin) {
       }
     }
 
-    // 6. D1 중복 체크 (랜딩별)
+    // 6. SMS 인증 완료 확인
+    if (phone) {
+      const verified = await env.DB.prepare(
+        'SELECT id FROM verification_codes WHERE phone = ? AND verified = 1 ORDER BY created_at DESC LIMIT 1'
+      ).bind(phone.replace(/-/g, '')).first();
+      if (!verified) {
+        return jsonResponse({ success: false, error: '휴대폰 인증을 완료해주세요.' }, 403);
+      }
+    }
+
+    // 7. D1 중복 체크 (랜딩별)
     if (phone) {
       const duplicate = await isDuplicate(env.DB, project, phone);
       if (duplicate) {
@@ -146,6 +165,104 @@ async function handleSubmit(request, env, origin) {
     } catch (_) {}
 
     return jsonResponse({ success: false, error: '저장 중 오류가 발생했습니다.' }, 500);
+  }
+}
+
+/**
+ * SMS 인증번호 발송
+ */
+async function handleSendCode(request, env, origin) {
+  try {
+    if (!isAllowedOrigin(origin)) {
+      return jsonResponse({ success: false, error: '허용되지 않은 출처입니다.' }, 403);
+    }
+
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return jsonResponse({ success: false, error: '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.' }, 429);
+    }
+
+    let data;
+    try {
+      data = await request.json();
+    } catch {
+      return jsonResponse({ success: false, error: '잘못된 요청 형식입니다.' }, 400);
+    }
+
+    const phone = (data.phone || '').replace(/-/g, '');
+    if (!/^010[2-9]\d{7}$/.test(phone)) {
+      return jsonResponse({ success: false, error: '올바른 연락처를 입력해주세요.' }, 400);
+    }
+
+    // 6자리 인증번호 생성
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + 3 * 60 * 1000); // 3분
+
+    // 기존 미인증 코드 삭제
+    await env.DB.prepare('DELETE FROM verification_codes WHERE phone = ? AND verified = 0')
+      .bind(phone).run();
+
+    // 인증코드 저장
+    await env.DB.prepare(
+      'INSERT INTO verification_codes (phone, code, expires_at, created_at) VALUES (?, ?, ?, ?)'
+    ).bind(phone, code, expiresAt.toISOString(), now.toISOString()).run();
+
+    // SMS 발송
+    await sendSmsCode(env, phone, code);
+
+    return jsonResponse({ success: true, message: '인증번호가 발송되었습니다.' });
+  } catch (error) {
+    console.error('인증번호 발송 오류:', error);
+    return jsonResponse({ success: false, error: 'SMS 발송 중 오류가 발생했습니다.' }, 500);
+  }
+}
+
+/**
+ * SMS 인증번호 확인
+ */
+async function handleVerifyCode(request, env, origin) {
+  try {
+    if (!isAllowedOrigin(origin)) {
+      return jsonResponse({ success: false, error: '허용되지 않은 출처입니다.' }, 403);
+    }
+
+    let data;
+    try {
+      data = await request.json();
+    } catch {
+      return jsonResponse({ success: false, error: '잘못된 요청 형식입니다.' }, 400);
+    }
+
+    const phone = (data.phone || '').replace(/-/g, '');
+    const code = data.code || '';
+
+    if (!phone || !code) {
+      return jsonResponse({ success: false, error: '연락처와 인증번호를 입력해주세요.' }, 400);
+    }
+
+    // 유효한 인증코드 조회
+    const row = await env.DB.prepare(
+      'SELECT * FROM verification_codes WHERE phone = ? AND code = ? AND verified = 0 ORDER BY created_at DESC LIMIT 1'
+    ).bind(phone, code).first();
+
+    if (!row) {
+      return jsonResponse({ success: false, error: '인증번호가 일치하지 않습니다.' }, 400);
+    }
+
+    // 만료 체크
+    if (new Date(row.expires_at) < new Date()) {
+      return jsonResponse({ success: false, error: '인증번호가 만료되었습니다. 다시 요청해주세요.' }, 400);
+    }
+
+    // 인증 완료 처리
+    await env.DB.prepare('UPDATE verification_codes SET verified = 1 WHERE id = ?')
+      .bind(row.id).run();
+
+    return jsonResponse({ success: true, message: '인증이 완료되었습니다.' });
+  } catch (error) {
+    console.error('인증 확인 오류:', error);
+    return jsonResponse({ success: false, error: '인증 확인 중 오류가 발생했습니다.' }, 500);
   }
 }
 

@@ -48,9 +48,23 @@ async function ensureHeader(sheetId, sheetName, fieldKeys, headers) {
  *   fields: { "이름": "홍길동", "연락처": "010-..." }
  * }
  */
+/**
+ * gid로 시트 메타데이터를 조회하여 현재 탭 이름 반환
+ */
+async function getSheetNameByGid(sheetId, gid, headers) {
+  const url = `${SHEETS_API_BASE}/${sheetId}?fields=sheets.properties`;
+  const res = await fetch(url, { headers });
+  if (!res.ok) return null;
+
+  const meta = await res.json();
+  const sheet = meta.sheets?.find(s => s.properties.sheetId === gid);
+  return sheet?.properties?.title || null;
+}
+
 export async function appendToSheet(accessToken, env, data) {
   const sheetId = data.sheetId || env.SHEET_ID;
   const sheetName = data.project || env.SHEET_NAME;
+  const tabId = data.tabId;   // gid (숫자, 선택)
   const fields = data.fields || {};
   const fieldKeys = Object.keys(fields);
 
@@ -77,7 +91,7 @@ export async function appendToSheet(accessToken, env, data) {
   const colLetter = String.fromCharCode(64 + colCount); // 1=A, 2=B, ...
   const body = JSON.stringify({ values: [row] });
 
-  // 지정된 탭에 저장 시도
+  // 1차: 탭 이름으로 저장 시도
   const url = `${SHEETS_API_BASE}/${sheetId}/values/${encodeURIComponent(sheetName)}!A:${colLetter}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
   const response = await fetch(url, { method: 'POST', headers, body });
 
@@ -85,7 +99,35 @@ export async function appendToSheet(accessToken, env, data) {
     return await response.json();
   }
 
-  // 탭을 못 찾으면 첫 번째 시트에 폴백
+  // 2차: tabId(gid)가 있으면 현재 탭 이름 조회 후 재시도
+  if (tabId != null) {
+    const resolvedName = await getSheetNameByGid(sheetId, tabId, headers);
+    if (resolvedName) {
+      // 변경된 탭 이름으로 헤더 재확인
+      const resolvedHeader = await ensureHeader(sheetId, resolvedName, fieldKeys, headers);
+      let resolvedRow;
+      if (resolvedHeader) {
+        resolvedRow = resolvedHeader.map((col) => {
+          if (col === '제출일시') return formatKoreanDate(new Date());
+          return fields[col] || '';
+        });
+      } else {
+        resolvedRow = row;
+      }
+
+      const resolvedBody = JSON.stringify({ values: [resolvedRow] });
+      const resolvedColLetter = String.fromCharCode(64 + resolvedRow.length);
+      const resolvedUrl = `${SHEETS_API_BASE}/${sheetId}/values/${encodeURIComponent(resolvedName)}!A:${resolvedColLetter}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+      const resolvedRes = await fetch(resolvedUrl, { method: 'POST', headers, body: resolvedBody });
+
+      if (resolvedRes.ok) {
+        console.log(`탭 이름 변경 감지: "${sheetName}" → "${resolvedName}" (gid: ${tabId})`);
+        return await resolvedRes.json();
+      }
+    }
+  }
+
+  // 최종 폴백: 첫 번째 시트
   const fallbackUrl = `${SHEETS_API_BASE}/${sheetId}/values/A:${colLetter}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
   const fallbackResponse = await fetch(fallbackUrl, { method: 'POST', headers, body });
 
