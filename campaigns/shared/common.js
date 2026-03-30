@@ -62,7 +62,7 @@ function initSmsVerification() {
         }
 
         sendCodeBtn.disabled = true;
-        sendCodeBtn.textContent = '발송중…';
+        sendCodeBtn.textContent = '발송중';
 
         try {
             const res = await fetch(`${API_BASE}/send-code`, {

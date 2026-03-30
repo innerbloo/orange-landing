@@ -892,6 +892,13 @@ a {
   cursor: pointer;
 }
 
+.verify-btn:disabled {
+  background: var(--color-text-sub);
+  color: var(--color-bg);
+  border-color: var(--color-text-sub);
+  cursor: default;
+}
+
 
 .verify-timer {
   font-size: 13px;
