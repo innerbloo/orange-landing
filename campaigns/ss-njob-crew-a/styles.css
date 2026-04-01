@@ -1,0 +1,654 @@
+/* Font display swap 강제 */
+html {background: #2e7d32}
+@font-face {
+    font-family: 'Pretendard Variable';
+    font-display: swap;
+    src: local('Pretendard Variable');
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Pretendard Variable', -apple-system, sans-serif;
+    color: var(--color-text);
+    background: var(--color-bg);
+    max-width: 430px;
+    /*max-width: 320px;*/
+    margin: 0 auto;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Utility */
+.gradient-text {
+    background: linear-gradient(110deg, var(--color-primary-light) 17%, var(--color-primary) 82%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Header */
+.header {
+    padding: 22px 18px 30px;
+}
+
+.logo {
+    width: 84px;
+    height: 29px;
+}
+
+/* section-01: 히어로 */
+.section-01 {
+    text-align: center;
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.hero-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.hero-title .gradient-text {
+    font-weight: 800;
+}
+
+.hero-title-image {
+    margin: 0 auto 30px;
+    width: 90%;
+    max-width: 280px;
+    height: auto;
+}
+
+/* 히어로 씬 (absolute 배치) */
+.hero-scene {
+    position: relative;
+    height: 470px;
+}
+
+/* 혜택 카드 공통 */
+.hero-benefit-card {
+    width: max-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-bg);
+    border-radius: 8px;
+    padding: 8px 14px;
+    box-shadow: 2px 2px 4px 2px rgba(145, 145, 145, 0.3);
+    position: absolute;
+    z-index: 3;
+}
+
+/* 카드 absolute 배치 (시안 기준 지그재그) */
+.hero-benefit-card--1 {
+    left: 50%;
+    transform: translateX(-75%);
+    top: 0;
+}
+
+.hero-benefit-card--2 {
+    left: 50%;
+    transform: translateX(-15%);
+    top: 55px;
+}
+
+.hero-benefit-card--3 {
+    left: 50%;
+    transform: translateX(-70%);
+    top: 110px;
+}
+
+.hero-benefit-card--4 {
+    left: 50%;
+    transform: translateX(-35%);
+    top: 165px;
+}
+
+.hero-benefit-icon {
+    width: 29px;
+    height: 29px;
+    flex-shrink: 0;
+}
+
+.hero-benefit-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.hero-benefit-text strong {
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.hero-benefit-check {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* 캐릭터 */
+.hero-character {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 210px;
+    width: 280px;
+    z-index: 1;
+}
+
+/* 코인 장식 */
+.hero-coin-1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(40%);
+    top: 10px;
+    width: 155px;
+    z-index: 2;
+}
+
+.hero-coin-2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-200%);
+    top: 250px;
+    width: 50px;
+    z-index: 2;
+}
+
+.hero-coin-arrow {
+    position: absolute;
+    left: 0;
+    top: 165px;
+    width: 82px;
+    z-index: 2;
+}
+
+
+/* 입금 실적 카드 */
+.hero-income-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-bg);
+    border-radius: 8px;
+    box-shadow: 2px 2px 4px 2px rgba(145, 145, 145, 0.3);
+    padding: 10px 16px;
+    width: 95%;
+    max-width: 300px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15px;
+    z-index: 3;
+}
+
+.hero-income-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.hero-income-amount {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.cta-button {
+    display: block;
+    width: 100%;
+    height: 42px;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 42px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.cta-button:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+.cta-disclaimer {
+    font-size: 12px;
+    color: var(--color-text-sub);
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* section-02: 고민 섹션 */
+.section-02 {
+    text-align: center;
+    padding: 40px 16px 30px;
+}
+
+.worry-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.4;
+}
+
+.worry-emoji {
+    width: 102px;
+    margin: 0 auto 30px;
+}
+
+.worry-title .gradient-text {
+    font-weight: 800;
+}
+
+.worry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.worry-card {
+    background: var(--color-bg-muted);
+    border-radius: 8px;
+    padding: 20px 9px;
+    text-align: center;
+    overflow: hidden;
+    word-break: keep-all;
+}
+
+.worry-card-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+
+.worry-card-desc strong {
+    font-weight: 700;
+}
+
+.worry-card-highlight {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 10px;
+}
+
+.worry-card-image-wrap {
+    height: 90px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.worry-card-image {
+    margin: 0 auto;
+}
+
+.worry-card:nth-child(1) .worry-card-image { width: 135px; }
+.worry-card:nth-child(2) .worry-card-image { width: 119px; }
+.worry-card:nth-child(3) .worry-card-image { width: 121px; }
+.worry-card:nth-child(4) .worry-card-image { width: 121px; }
+
+/* section-03: 소개 섹션 */
+.section-03 {
+    text-align: center;
+    padding: 40px 16px 0;
+    background: linear-gradient(to bottom, #9cf2ff 0%, var(--color-bg) 20%);
+}
+
+.intro-badge {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 12px;
+}
+
+.intro-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.intro-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.intro-title .gradient-text {
+    font-weight: 800;
+}
+
+.intro-title-image {
+    margin: 0 auto 0;
+    width: 90%;
+    max-width: 280px;
+    height: auto;
+}
+
+.intro-character {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* section-04: 혜택 상세 섹션 */
+.section-04 {
+    text-align: center;
+    padding: 40px 16px 30px;
+}
+
+.benefit-detail-badge {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 12px;
+}
+
+.benefit-detail-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.benefit-detail-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.benefit-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.benefit-detail-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--color-bg-muted);
+    border-radius: 8px;
+    padding: 16px 12px;
+    text-align: left;
+}
+
+.benefit-detail-image {
+    width: 77px;
+    flex-shrink: 0;
+}
+
+.benefit-detail-heading {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.benefit-detail-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.3;
+}
+
+.benefit-detail-desc strong {
+    font-weight: 700;
+}
+
+/* section-05: 지원 혜택 섹션 */
+.section-05 {
+    text-align: center;
+    padding: 40px 16px 30px;
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.support-badge {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 12px;
+}
+
+.support-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.support-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.support-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.support-card {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    text-align: center;
+}
+
+.support-card--reverse {
+    flex-direction: row-reverse;
+}
+
+.support-card-image-wrap {
+    width: 145px;
+    height: 145px;
+    flex-shrink: 0;
+    background: var(--color-bg-muted);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.support-card-image {
+    width: 100%;
+    max-width: 125px;
+    height: auto;
+}
+
+.support-card-text {
+    flex: 1;
+    padding: 0 8px;
+}
+
+.support-card-heading {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 6px;
+}
+
+.support-card-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.support-card-desc strong {
+    font-weight: 700;
+}
+
+.support-card-sub {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--color-text-caption);
+    line-height: 1.5;
+}
+
+/* section-06: 스텝 가이드 섹션 */
+.section-06 {
+    text-align: center;
+    padding: 40px 16px 30px;
+    background: var(--color-bg-muted);
+}
+
+.step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.step-title .gradient-text {
+    font-weight: 800;
+}
+
+.step-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.step-item {
+    text-align: center;
+}
+
+.step-image {
+    width: 155px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.step-badge {
+    display: inline-block;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+}
+
+.step-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0;
+}
+
+.step-disclaimer {
+    font-size: 12px;
+    color: var(--color-text-sub);
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+/* section-07: 수익 인증 섹션 */
+.section-07 {
+    text-align: center;
+    padding: 40px 16px 30px;
+    background: linear-gradient(26deg, #bfeefb 12%, #ffffff 49%, #cbdfff 100%);
+    overflow: hidden;
+}
+
+.proof-scene {
+    position: relative;
+}
+
+.proof-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+.proof-title-image {
+    width: 90%;
+    max-width: 280px;
+    height: auto;
+    margin: 0 auto 10px;
+    position: relative;
+    z-index: 3;
+}
+
+.proof-phone {
+    max-width: 344px;
+    margin-left: 20px;
+    /*margin: 0 auto 0 auto;*/
+    position: relative;
+    z-index: 1;
+}
+
+.proof-coin-1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(40%);
+    top: 10px;
+    width: 155px;
+    z-index: 2;
+}
+
+.proof-coin-2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-200%);
+    top: 250px;
+    width: 50px;
+    z-index: 2;
+}
+
+/* Fade-up 애니메이션 */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1), transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 혜택 카드 순차 등장 애니메이션 — 완성 후 추가 */
