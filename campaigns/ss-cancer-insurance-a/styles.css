@@ -383,8 +383,8 @@ a {
 
 .coverage-table th:nth-child(2),
 .coverage-table td:nth-child(2) {
-    width: 22%;
-    word-break: break-word;
+    min-width: 160px;
+    word-break: keep-all;
 }
 
 .coverage-table-info {
