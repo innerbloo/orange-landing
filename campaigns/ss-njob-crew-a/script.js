@@ -10,7 +10,7 @@ document.querySelectorAll('.experience-btn').forEach(btn => {
 
 // 공통 초기화
 initLanding({
-    project: 'N잡러-A',
+    project: 'N잡크루-A',
     sheetId: '11MKLOt1BwPG-cXKohjaCTZdgda3aw85Z6irEiFufxdw',
     tabId: 732159719,
 
