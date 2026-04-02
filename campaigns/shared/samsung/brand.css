@@ -18,3 +18,13 @@
   --color-error: #e5003a;
   --color-success: #2e7d32;
 }
+
+/* 삼성화재 공통 푸터 */
+.footer {
+  padding: 24px 16px 40px;
+  font-size: 10px;
+  color: var(--color-text-sub);
+  line-height: 1.6;
+  border-top: 1px solid var(--color-bg-border);
+  word-break: keep-all;
+}

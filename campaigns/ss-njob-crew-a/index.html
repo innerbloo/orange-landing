@@ -10,19 +10,60 @@
   <!-- Open Graph -->
   <meta property="og:title" content="삼성화재 N잡크루 - 금융 파트너 모집">
   <meta property="og:description" content="삼성화재 N잡크루, 금융 파트너로 거듭나세요! 높은 수수료, DB 제공, 쉬운 영업방식, 교육까지.">
+  <meta property="og:image" content="https://planetdb.co.kr/ss-njob-crew-a/assets/og.jpg">
   <meta property="og:url" content="https://planetdb.co.kr/ss-njob-crew-a/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ko_KR">
   <!-- 카카오톡 -->
   <meta property="kakao:title" content="삼성화재 N잡크루 - 금융 파트너 모집">
   <meta property="kakao:description" content="삼성화재 N잡크루, 금융 파트너로 거듭나세요!">
+  <meta property="kakao:image" content="https://planetdb.co.kr/ss-njob-crew-a/assets/og.jpg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://planetdb.co.kr">
   <link rel="preload" as="image" href="assets/char_hero-woman.webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/logo.svg">
-  <!-- 크리티컬 CSS는 완성 후 추가 -->
-  <link rel="stylesheet" href="../shared/samsung.css">
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    @font-face{font-family:'Pretendard Variable';font-display:swap;src:local('Pretendard Variable')}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Pretendard Variable',-apple-system,sans-serif;color:#191f28;background:#fff;max-width:430px;margin:0 auto;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    img{max-width:100%;height:auto;display:block}
+    a{text-decoration:none;color:inherit}
+    .gradient-text{background:linear-gradient(110deg,#00bbff 17%,#0036e5 82%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .header{padding:22px 18px 30px}
+    .logo{width:84px;height:29px}
+    .section-01{text-align:center;padding:0 16px;overflow:hidden}
+    .hero-subtitle{font-size:16px;font-weight:700;color:#191f28;line-height:1.5}
+    .hero-title{font-size:22px;font-weight:900;margin-bottom:10px}
+    .hero-title .gradient-text{font-weight:800}
+    .hero-title-image{margin:0 auto 30px;width:90%;max-width:280px;height:auto}
+    .hero-scene{position:relative;height:470px}
+    .hero-benefit-card{width:max-content;display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:8px;padding:8px 14px;box-shadow:2px 2px 4px 2px rgba(145,145,145,0.3);position:absolute;z-index:3}
+    .hero-benefit-card--1{left:50%;transform:translateX(-75%);top:0}
+    .hero-benefit-card--2{left:50%;transform:translateX(-15%);top:55px}
+    .hero-benefit-card--3{left:50%;transform:translateX(-70%);top:110px}
+    .hero-benefit-card--4{left:50%;transform:translateX(-35%);top:165px}
+    .hero-benefit-icon{width:29px;height:29px;flex-shrink:0}
+    .hero-benefit-text{font-size:14px;font-weight:700;color:#191f28;white-space:nowrap}
+    .hero-benefit-text strong{font-weight:800;color:#0036e5}
+    .hero-benefit-check{width:20px;height:20px;flex-shrink:0}
+    .hero-character{position:absolute;left:50%;transform:translateX(-50%);top:210px;width:280px;z-index:1}
+    .hero-coin-1{position:absolute;left:50%;transform:translateX(40%);top:10px;width:155px;z-index:2}
+    .hero-coin-2{position:absolute;left:50%;transform:translateX(-200%);top:250px;width:50px;z-index:2}
+    .hero-coin-arrow{position:absolute;left:0;top:165px;width:82px;z-index:2}
+    .hero-income-card{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;box-shadow:2px 2px 4px 2px rgba(145,145,145,0.3);padding:10px 16px;width:95%;max-width:300px;position:absolute;left:50%;transform:translateX(-50%);bottom:15px;z-index:3}
+    .hero-income-label{font-size:12px;font-weight:700;color:#191f28}
+    .hero-income-amount{font-size:14px;font-weight:700;color:#0036e5}
+    .cta-button{display:block;width:100%;height:42px;background:#0036e5;color:#fff;font-size:16px;font-weight:700;border:none;border-radius:8px;text-align:center;line-height:42px;cursor:pointer;position:relative;z-index:1}
+    .cta-disclaimer{font-size:12px;color:#919191;text-align:center;margin-top:15px}
+    .fade-up{opacity:0}
+    .sticky-cta{position:fixed;opacity:0;pointer-events:none}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:100;display:flex;justify-content:center;align-items:center;pointer-events:none}
+    .modal-content{opacity:0}
+  </style>
+  <link rel="stylesheet" href="../shared/samsung/brand.css">
+  <link rel="stylesheet" href="../shared/common.css">
+  <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 </head>
@@ -72,7 +113,7 @@
       <!-- 입금 실적 카드 -->
       <div class="hero-income-card">
         <span class="hero-income-label">삼성화재N잡크루 2월 입금</span>
-        <span class="hero-income-amount">150,000,000원</span>
+        <span class="hero-income-amount"><span class="count-up" data-target="150000000" data-suffix="원" data-format="comma">0원</span></span>
       </div>
     </div>
     <a href="#form-section" class="cta-button">N잡 파트너 지원하기</a>
@@ -80,14 +121,14 @@
   </section>
 
   <!-- 고민 섹션 -->
-  <section class="section-02">
+  <section class="section-02 fade-up">
     <h2 class="worry-title">혹시 <span class="gradient-text">이런 고민</span>,<br>갖고 계신가요?</h2>
     <img src="assets/icon_thinking-face.webp" alt="" class="worry-emoji" width="204" height="204" loading="lazy">
 
     <div class="worry-grid">
       <div class="worry-card">
         <p class="worry-card-desc">퇴근 후에도 <strong>내 체력과 <br> 스케줄</strong>에 맞출 수 있는</p>
-        <p class="worry-card-highlight gradient-text">부담없는 N잡 없을까?</p>
+        <p class="worry-card-highlight gradient-text">부담 없는 N잡 없을까?</p>
         <div class="worry-card-image-wrap">
           <img src="assets/illust_checklist.webp" alt="" class="worry-card-image" width="270" height="172" loading="lazy">
         </div>
@@ -117,16 +158,16 @@
   </section>
 
   <!-- 소개 섹션 -->
-  <section class="section-03">
+  <section class="section-03 fade-up">
     <img src="assets/icon_verified-badge.webp" alt="" class="intro-badge" width="32" height="32" loading="lazy">
-    <p class="intro-subtitle">시간과 장소의 제약없는!</p>
+    <p class="intro-subtitle">시간과 장소의 제약 없는!</p>
     <h2 class="intro-title"><span class="gradient-text">쉽고 편안한 N잡</span>을 소개합니다!</h2>
     <img src="assets/title_njob-crew.webp" alt="삼성화재 N잡크루" class="intro-title-image" width="462" height="80" loading="lazy">
     <img src="assets/char_hero-woman-arms.webp" alt="N잡크루 소개 일러스트" class="intro-character" width="900" height="903" loading="lazy">
   </section>
 
   <!-- 혜택 상세 섹션 -->
-  <section class="section-04">
+  <section class="section-04 fade-up">
     <img src="assets/icon_verified-badge.webp" alt="" class="benefit-detail-badge" width="32" height="32" loading="lazy">
     <p class="benefit-detail-subtitle">잠깐! 보험 설계사?</p>
     <h2 class="benefit-detail-title"><span class="gradient-text">이런 것들을 할 수 있어요!</span></h2>
@@ -149,7 +190,7 @@
       <div class="benefit-detail-card">
         <img src="assets/illust_side-income.webp" alt="" class="benefit-detail-image" width="174" height="174" loading="lazy">
         <div class="benefit-detail-text">
-          <p class="benefit-detail-heading">부담없이 도전할 수 있는,</p>
+          <p class="benefit-detail-heading">부담 없이 도전할 수 있는,</p>
           <p class="benefit-detail-desc">본업이 있어도 할 수 있어<br><strong>일하는 만큼 부수입</strong>을 만들어요</p>
         </div>
       </div>
@@ -159,7 +200,7 @@
   </section>
 
   <!-- 지원 혜택 섹션 -->
-  <section class="section-05">
+  <section class="section-05 fade-up">
     <img src="assets/icon_verified-badge.webp" alt="" class="support-badge" width="32" height="32" loading="lazy">
     <p class="support-subtitle">삼성화재에서 아낌없이 지원해요</p>
     <h2 class="support-title"><span class="gradient-text">이런 혜택이 있어요!</span></h2>
@@ -182,24 +223,25 @@
         <div class="support-card-text">
           <p class="support-card-heading gradient-text">초기 비용 0원</p>
           <p class="support-card-desc">교육부터 자격시험<br>응시까지 <strong>모두 무료!</strong></p>
-          <p class="support-card-sub">초기 비용에 대한 부담없이,<br>가볍게 시작해보세요.</p>
+          <p class="support-card-sub">초기 비용에 대한 부담 없이,<br>가볍게 시작해보세요.</p>
         </div>
       </div>
       <div class="support-card">
         <div class="support-card-image-wrap">
-          <img src="assets/illust_mentor-chat.webp" alt="" class="support-card-image" width="250" height="258" loading="lazy">
+          <img src="assets/illust_support-third.webp" alt="" class="support-card-image" width="252" height="252" loading="lazy">
         </div>
         <div class="support-card-text">
-          <p class="support-card-heading gradient-text">1대1 담당 멘토 배정</p>
-          <p class="support-card-desc">보험 지식이<br><strong>전혀 없어도</strong> 괜찮아요</p>
-          <p class="support-card-sub">교육, 시험, 등록, 활동까지<br>전 과정을 밀착 지원합니다.</p>
+          <p class="support-card-heading gradient-text">영업 활동 지원</p>
+          <p class="support-card-desc">다양한 <strong>교육 콘텐츠와</strong> <br> <strong>영업 활동 Tool </strong>제공!</p>
+          <p class="support-card-sub">설계사 활동에 필요한 실전 <br>
+            역량을 위해 지원해드려요.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 스텝 가이드 섹션 -->
-  <section class="section-06">
+  <section class="section-06 fade-up">
     <h2 class="step-title"><span class="gradient-text">쉽고 편안한 N잡</span><br>이렇게 시작하세요</h2>
 
     <div class="step-list">
@@ -224,18 +266,256 @@
   </section>
 
   <!-- 수익 인증 섹션 -->
-  <section class="section-07">
+  <section class="section-07 fade-up">
     <div class="proof-scene">
-      <p class="proof-subtitle">시간과 장소의 제약없는</p>
+      <p class="proof-subtitle">시간과 장소의 제약 없는</p>
       <img src="assets/title_njob-crew.webp" alt="삼성화재 N잡크루" class="proof-title-image" width="462" height="80" loading="lazy">
       <img src="assets/illust_phone-hand.webp" alt="N잡크루 수익 인증" class="proof-phone" width="870" height="1122" loading="lazy">
       <img src="assets/illust_coin.webp" alt="" class="proof-coin-1" width="285" height="285">
+      <img src="assets/illust_coin-arrow.webp" alt="" class="proof-coin-arrow" width="164" height="152">
       <img src="assets/illust_coin-small.webp" alt="" class="proof-coin-2" width="111" height="111">
     </div>
     <a href="#form-section" class="cta-button">N잡 파트너 지원하기</a>
   </section>
 
+  <!-- FAQ 섹션 -->
+  <section class="section-08 fade-up">
+    <img src="assets/icon_verified-badge.webp" alt="" class="faq-badge" width="32" height="32" loading="lazy">
+    <p class="faq-subtitle">다른 사람들은 이런 걸</p>
+    <h2 class="faq-title"><span class="gradient-text">궁금해했어요!</span></h2>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">신청 후 불필요한 영업 관련 전화가 오지 않을까요?</p>
+        </summary>
+        <div class="faq-answer">삼성화재 N잡크루는 불필요한 상담전화가 없으며 지원자분들의 자율성을 최우선으로 존중합니다. 오직 설계사 자격 시험 합격과 전문 역량 강화에만 몰입할 수 있는 환경에서 부담 없이 가벼운 마음으로 새로운 도전을 시작하세요!</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">자격 취득까지는 얼만큼의 시간이 필요한가요?</p>
+        </summary>
+        <div class="faq-answer">개인별로 투자할 수 있는 시간에 따라 다를 수 있습니다. 삼성화재 MOVE에는 총 6시간 분량의 강의 동영상과 20개의 모의고사가 탑재되어 있습니다. 학습에 투자할 수 있는 시간에 따라 다르시겠지만, 오프라인 교육에 참여하시는 분들은 참고로 말씀드리면 학습과 모의고사 실전 테스트를 포함해 평균 10일의 과정으로 운영되고 있습니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">자격만 취득하면 바로 설계사로 일할 수 있나요?</p>
+        </summary>
+        <div class="faq-answer">자격시험에 합격하시고 나면 보험연수원에서 진행하는 '의무교육'을 받으셔야 합니다. 총 30시간의 의무교육을 받으시고 나면, N잡크루로서 활동하실 수 있으므로 설계사 등록 의사를 담당멘토를 통해 알려주시면 됩니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">자격시험에도 부분합격이 있나요?</p>
+        </summary>
+        <div class="faq-answer">네. 시험은 '손해보험'과 '제3보험'으로 구분되고 각각 100점 만점에 60점 이상의 점수를 받으셔야 최종 합격입니다. 부분합격(1년 이내 결과만 유효)의 경우 다음 시험에 불합격한 시험과목만 응시하시면 됩니다. 자격시험은 총 객관식 50문항으로 구성되어 있으며, 1~33번이 '손해보험', 18~50번이 '제3보험'영역입니다. 시험시간은 1시간입니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">자격시험이 많이 어렵나요?</p>
+        </summary>
+        <div class="faq-answer">자격시험은 보험설계사로 일하기 위한 기본적인 지식을 테스트하는 단계로 운전면허 필기 시험과 비슷한 난이도라고 생각하시면 됩니다. 실제 시험 합격률은 80% 이상으로 매우 높습니다.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question-row">
+          <span class="faq-q">Q</span>
+          <p class="faq-question">설계사 자격 취득에 들어가는 비용은 없나요?</p>
+        </summary>
+        <div class="faq-answer">응시료 전액을 삼성화재가 지원해드리므로 열심히 공부하시고 자격을 취득하는 것에만 전념하시면 됩니다. 자격취득 후 '의무교육' 수강을 위한 수강료도 전액 지원해 드립니다.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- 폼 섹션 -->
+  <section class="section-form fade-up" id="form-section">
+    <form id="landing-form" novalidate>
+      <h2 class="form-title">N잡 지원하기</h2>
+
+      <div class="form-group">
+        <label for="applicant-name">이름</label>
+        <input type="text" id="applicant-name" placeholder="홍길동">
+      </div>
+      <div class="form-group">
+        <label for="phone">연락처</label>
+        <div class="phone-verify-row">
+          <input type="tel" id="phone" inputmode="numeric" pattern="[0-9\-]*" placeholder="010 - 0000 - 0000">
+          <button type="button" id="send-code-btn" class="verify-btn">인증요청</button>
+        </div>
+      </div>
+      <div class="form-group verify-code-group" id="verify-code-group" style="display:none;">
+        <label for="verify-code">인증번호</label>
+        <div class="phone-verify-row">
+          <input type="text" id="verify-code" inputmode="numeric" maxlength="6" placeholder="6자리 입력" autocomplete="one-time-code">
+          <button type="button" id="verify-code-btn" class="verify-btn">확인</button>
+        </div>
+        <p class="verify-timer" id="verify-timer"></p>
+      </div>
+      <div class="form-group">
+        <label for="applicant-birth">생년월일</label>
+        <input type="text" id="applicant-birth" inputmode="numeric" placeholder="1990.01.01" data-format="birth">
+      </div>
+      <div class="form-group">
+        <label for="applicant-email">이메일</label>
+        <input type="email" id="applicant-email" placeholder="example@email.com">
+      </div>
+      <div class="form-group">
+        <label>지역</label>
+        <div class="form-row">
+          <div class="form-group half">
+            <select id="region-sido">
+              <option value="" disabled selected>시/도</option>
+            </select>
+          </div>
+          <div class="form-group half">
+            <select id="region-sigungu">
+              <option value="" disabled selected>구/군</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="applicant-job">직업</label>
+        <input type="text" id="applicant-job" placeholder="직업을 입력해주세요">
+      </div>
+      <div class="form-group">
+        <label for="referral-code">추천인코드</label>
+        <input type="text" id="referral-code" inputmode="numeric" placeholder="000000 (선택)">
+      </div>
+      <div class="form-group">
+        <label>설계사 경력 유무</label>
+        <div class="experience-toggle">
+          <button type="button" class="experience-btn" data-value="있음">있음</button>
+          <button type="button" class="experience-btn active" data-value="없음">없음</button>
+        </div>
+      </div>
+
+      <!-- 약관 동의 -->
+      <div class="agreement-section">
+        <div class="agreement-all">
+          <label>
+            <input type="checkbox" id="agree-all">
+            <span>필수 약관 내용 전체 동의</span>
+          </label>
+        </div>
+        <div class="agreement-item">
+          <label>
+            <input type="checkbox" id="privacy" class="agree-item">
+            <span>(필수) 개인정보 제3자 제공 동의</span>
+          </label>
+          <button type="button" class="more-link">더보기</button>
+        </div>
+        <div class="agreement-item">
+          <label>
+            <input type="checkbox" id="marketing" class="agree-item">
+            <span>(필수) 광고성 정보수신 동의</span>
+          </label>
+          <button type="button" class="more-link">더보기</button>
+        </div>
+      </div>
+
+      <!-- 제출 버튼 -->
+      <button type="submit" id="submit-btn" class="cta-button submit-button">
+        <span class="btn-text">N잡 파트너 지원하기</span>
+        <span class="btn-loading" hidden>처리중</span>
+      </button>
+      <div id="form-message" class="form-message" hidden></div>
+    </form>
+  </section>
+
   </main>
+
+  <footer class="footer">
+    <p>주식회사 오렌지플래닛 | 대표이사 정인배</p>
+    <p>개인정보관리책임자 정인배</p>
+    <p>인천광역시 연수구 인천타워대로54번길 15-3, 501호 501호 알717호(송도동, 리슈플라자)</p>
+    <p>orangeplanetad@naver.com | 010-2730-8804</p>
+  </footer>
+
+  <!-- 개인정보 제3자 제공 동의 모달 -->
+  <div class="modal-overlay" id="modal-privacy" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-privacy-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-privacy-title">개인정보 제3자 제공 동의</h3>
+        <button type="button" class="modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>주식회사 오렌지플래닛(이하 "회사")은 삼성화재 N잡크루 파트너 지원 서비스 제공을 위해 아래와 같이 개인정보를 제3자에게 제공합니다. 내용을 확인하신 후 동의 여부를 결정하여 주시기 바랍니다.</p>
+        <h4>1. 개인정보를 제공받는 자</h4>
+        <p>삼성화재해상보험 주식회사 및 제휴 보험대리점</p>
+        <h4>2. 제공하는 개인정보 항목</h4>
+        <p>이름, 연락처, 생년월일, 이메일, 지역, 직업, 추천인코드, 설계사 경력 유무</p>
+        <h4>3. 제공받는 자의 이용 목적</h4>
+        <p>N잡크루 파트너 지원 접수, 자격시험 교육 안내, 설계사 등록 상담</p>
+        <h4>4. 보유 및 이용 기간</h4>
+        <p>개인정보 제공 동의일로부터 1년간 보유하며, 목적 달성 후 지체 없이 파기합니다. 단, 관련 법령에 의해 보존이 필요한 경우 해당 법령에서 정한 기간 동안 보존합니다.</p>
+        <h4>5. 동의 거부 권리 및 불이익</h4>
+        <p>귀하는 개인정보 제3자 제공에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부하실 경우 N잡크루 파트너 지원 서비스 이용이 제한됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 광고성 정보수신 동의 모달 -->
+  <div class="modal-overlay" id="modal-marketing" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-marketing-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-marketing-title">광고성 정보수신 동의</h3>
+        <button type="button" class="modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>주식회사 오렌지플래닛(이하 "회사")은 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 제50조에 의거하여 아래와 같이 광고성 정보를 전송하고자 합니다.</p>
+        <h4>1. 전송자</h4>
+        <p>주식회사 오렌지플래닛 및 삼성화재해상보험 주식회사</p>
+        <h4>2. 수신 항목</h4>
+        <p>연락처(휴대전화번호), 이메일</p>
+        <h4>3. 광고성 정보의 내용</h4>
+        <p>N잡크루 관련 교육 안내, 설계사 활동 정보, 이벤트 및 프로모션 안내</p>
+        <h4>4. 전송 방법</h4>
+        <p>SMS(문자메시지), MMS, 전화, 이메일</p>
+        <h4>5. 전송 기간 및 빈도</h4>
+        <p>동의일로부터 1년간 (월 최대 4회 이내)</p>
+        <h4>6. 수신 동의 변경 및 철회</h4>
+        <p>광고성 정보 수신에 동의하신 이후에도 언제든지 수신을 거부하실 수 있으며, 수신 거부 시 더 이상 광고성 정보를 전송하지 않습니다.<br>수신 거부 방법: 문자 수신 시 안내에 따라 거부하거나, 회사에 직접 연락 (010-2730-8804 / orangeplanetad@naver.com)</p>
+        <h4>7. 동의 거부 권리 및 불이익</h4>
+        <p>귀하는 광고성 정보 수신에 대한 동의를 거부할 권리가 있습니다. 다만, 동의를 거부하실 경우 N잡크루 관련 이벤트 및 혜택 안내를 받으실 수 없습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 플로팅 CTA -->
+  <a href="#form-section" class="sticky-cta" id="sticky-cta">N잡 파트너 지원하기</a>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "삼성화재 N잡크루 - 금융 파트너 모집",
+    "description": "삼성화재 N잡크루, 금융 파트너로 거듭나세요! 높은 수수료, DB 제공, 쉬운 영업방식, 교육까지.",
+    "url": "https://planetdb.co.kr/ss-njob-crew-a/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "주식회사 오렌지플래닛",
+      "url": "https://planetdb.co.kr",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+82-10-2730-8804",
+        "email": "orangeplanetad@naver.com",
+        "contactType": "customer service",
+        "availableLanguage": "Korean"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "인천광역시",
+        "addressRegion": "연수구",
+        "streetAddress": "인천타워대로54번길 15-3, 501호 알717호(송도동, 리슈플라자)",
+        "addressCountry": "KR"
+      }
+    }
+  }
+  </script>
 
   <script src="../shared/common.js" defer></script>
   <script src="script.js" defer></script>

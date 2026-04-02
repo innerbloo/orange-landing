@@ -1213,16 +1213,6 @@ a {
   font-size: 11px;
 }
 
-/* Footer */
-.footer {
-  padding: 24px 16px 40px;
-  font-size: 10px;
-  color: var(--color-text-sub);
-  line-height: 1.6;
-  border-top: 1px solid var(--color-bg-border);
-  word-break: keep-all;
-}
-
 /* ========== 동적 요소 ========== */
 
 /* 1. 플로팅 CTA */

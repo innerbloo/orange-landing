@@ -14,9 +14,11 @@
 landing/
 ├── campaigns/                  ← Cloudflare Pages 배포 루트 (planetdb.co.kr)
 │   ├── 404.html                ← 루트 및 존재하지 않는 경로 → 404 페이지
-│   ├── shared/                 ← 광고주 공통 리소스
+│   ├── shared/                 ← 공통 리소스
 │   │   ├── common.js           ← 전 랜딩 공통 JS (SMS 인증, 폼, 애니메이션 등)
-│   │   └── samsung.css         ← 삼성화재 브랜드 색상 CSS 변수
+│   │   ├── common.css          ← 전 랜딩 공통 CSS (모달 등)
+│   │   └── samsung/            ← 삼성화재 광고주 리소스
+│   │       └── brand.css       ← 삼성화재 브랜드 색상 CSS 변수
 │   ├── default/                ← 기본 랜딩 템플릿
 │   ├── ss-pet-insurance-a/     ← 삼성화재 펫보험 A
 │   └── ...
@@ -88,15 +90,19 @@ CREATE UNIQUE INDEX idx_project_phone ON submissions (project, phone);
 
 | 접두사 | 광고주 | 공통 CSS |
 |--------|--------|----------|
-| `ss-`  | 삼성화재 | `shared/samsung.css` |
+| `ss-`  | 삼성화재 | `shared/samsung/brand.css` |
 
 - 공통 CSS: `campaigns/shared/{광고주}.css` — 브랜드 색상을 CSS 변수(`:root`)로 정의
 - 각 랜딩의 `styles.css`에서 하드코딩 색상 대신 CSS 변수 사용
 - 새 광고주 추가 시: 접두사 + 공통 CSS 파일 생성
 
-## JS 공통/랜딩별 분리 구조
+## 공통 리소스 분리 구조
 
-### 공통 (`shared/common.js`) — 모든 랜딩에서 로드
+### 공통 CSS (`shared/common.css`) — 모든 랜딩에서 로드
+- 모달 (modal-overlay, modal-content, modal-header, modal-close, modal-body)
+- 폼/약관 등 광고주별로 다를 수 있는 스타일은 각 랜딩의 `styles.css`에서 관리
+
+### 공통 JS (`shared/common.js`) — 모든 랜딩에서 로드
 - SMS 인증 (발송, 확인, 타이머, 초기화)
 - 폼 제출 (API 호출, 로딩, 메시지, 리셋)
 - 공통 검증 (연락처 형식, 허위번호, SMS 인증 완료)
@@ -106,6 +112,7 @@ CREATE UNIQUE INDEX idx_project_phone ON submissions (project, phone);
 - 플로팅 CTA 표시/숨김
 - 모달 (열기/닫기, 키보드 트랩)
 - select 스타일, 연락처 자동 하이픈, 생년월일 포맷
+- 지역 선택 (시/도 → 구/군 연동, `#region-sido` + `#region-sigungu` 있으면 자동 초기화)
 
 ### 랜딩별 (`script.js`) — `initLanding(config)` 호출
 ```js
@@ -132,6 +139,7 @@ initLanding({
    - 생년월일 input에 `data-format="birth"` 속성 추가
 3. `script.js` 수정:
    - `initLanding()` 호출: project, sheetId, tabId, buildFields, validateFields, onReset
+   - **project**: 반드시 사용자에게 구글시트 탭 이름을 물어볼 것 (시트 하단의 탭 이름, D1 중복 체크 단위)
    - **tabId**: 반드시 사용자에게 구글시트 탭의 gid를 물어볼 것 (URL의 `#gid=숫자` 부분)
    - 해당 랜딩 전용 로직만 작성 (예: 펫타입 토글, 몸무게 포맷)
 4. 구글시트에 해당 탭 생성 (헤더는 자동 생성됨)
@@ -139,8 +147,9 @@ initLanding({
 6. `planetdb.co.kr/{접두사}-새이름/` 으로 접근
 
 > **⚠️ 새 랜딩 생성 시 반드시 사용자에게 확인할 것:**
-> - 접두사가 새로운 광고주(기존에 없는 접두사)면 → `project`, `sheetId`, `tabId` 모두 물어볼 것
-> - 같은 광고주의 추가 랜딩이면 → `project`, `tabId`는 물어보고, `sheetId`는 기존 값 재사용
+> - 접두사가 새로운 광고주(기존에 없는 접두사)면 → `project`(탭 이름), `sheetId`, `tabId` 모두 물어볼 것
+> - 같은 광고주의 추가 랜딩이면 → `project`(탭 이름), `tabId`는 물어보고, `sheetId`는 기존 값 재사용
+> - `project`는 구글시트 탭 이름과 동일해야 함 (임의로 지정하지 말 것)
 > - `tabId`(gid)는 순번이 아닌 구글이 자동 부여하는 고유 숫자 (시트 URL의 `#gid=` 값)
 
 ## SMS 인증 흐름
@@ -288,12 +297,18 @@ initLanding({
 
 ### 11. 크리티컬 CSS 동기화 규칙
 
-`styles.css`에서 ATF 관련 스타일을 변경하면, `index.html`의 인라인 `<style>` 블록도 **반드시 동일하게 수정**할 것. 크리티컬 CSS는 다음 범위를 포함:
+`styles.css`에서 ATF 관련 스타일을 변경하면, `index.html`의 인라인 `<style>` 블록도 **반드시 동일하게 수정**할 것.
+
+**모든 랜딩 공통 필수** (FOUC 방지):
+- `.fade-up{opacity:0}` — 스크롤 애니메이션 대상 초기 숨김
+- `.sticky-cta{position:fixed;opacity:0;pointer-events:none}` — 플로팅 CTA 초기 숨김
+- `.modal-overlay{...pointer-events:none}` + `.modal-content{opacity:0}` — 모달 초기 숨김
+
+**랜딩별 ATF 범위** (히어로까지 빠르게 렌더링):
 - 리셋/베이스 (`*`, `body`, `img`, `a`)
 - 그라데이션 텍스트 (`.gradient-text`)
-- 헤더 + 히어로 섹션 (`.header` ~ `.hero-*`, `.benefit-*`)
-- CTA 버튼 (`.section-02`, `.cta-button`)
-- 모달/스티키 초기 상태 (`.modal-overlay`, `.sticky-cta` — `opacity:0` 으로 FOUC 방지)
+- 헤더 + 히어로 섹션 (`.header` ~ `.hero-*`)
+- CTA 버튼 (`.cta-button`)
 
 ## 무료 티어 한도
 

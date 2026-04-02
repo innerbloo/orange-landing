@@ -49,6 +49,7 @@ function initLanding(config) {
     initSelectStyle();
     initPhoneFormat();
     initBirthFormat();
+    initRegionSelect();
 }
 
 // ── SMS 인증 ──
@@ -376,29 +377,23 @@ function initAnimations() {
     );
     document.querySelectorAll('.fade-up').forEach((el) => fadeObserver.observe(el));
 
-    // count-up
-    const countObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target;
-            const target = parseInt(el.dataset.target);
-            const suffix = el.dataset.suffix;
-            const duration = 1500;
-            const start = performance.now();
+    // count-up (즉시 실행)
+    document.querySelectorAll('.count-up').forEach((el) => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix;
+        const duration = 1500;
+        const start = performance.now();
 
-            function update(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                const current = Math.round(target * eased);
-                el.textContent = current.toLocaleString() + suffix;
-                if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-            countObserver.unobserve(el);
-        });
-    }, { threshold: 0.5, rootMargin: '0px 0px -60px 0px' });
-    document.querySelectorAll('.count-up').forEach((el) => countObserver.observe(el));
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(target * eased);
+            el.textContent = current.toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    });
 
     // stagger (순차 애니메이션)
     const staggerObserver = new IntersectionObserver((entries) => {
@@ -424,6 +419,21 @@ function initAnimations() {
 
     document.querySelectorAll('.benefit-card').forEach((el) => el.dataset.stagger = '');
     document.querySelectorAll('.benefit-column').forEach((col) => staggerObserver.observe(col));
+
+    // submit-button pulse
+    const pulseObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const btn = entry.target.querySelector('.submit-button');
+            if (btn) {
+                btn.classList.add('pulse');
+                btn.addEventListener('animationend', () => btn.classList.remove('pulse'), { once: true });
+            }
+            pulseObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.3 });
+    const formSection = document.querySelector('.section-12') || document.querySelector('.section-form');
+    if (formSection) pulseObserver.observe(formSection);
 }
 
 // ── 플로팅 CTA ──
@@ -455,9 +465,9 @@ function initStickyCta() {
     }, { threshold: 0.1 });
 
     const section01 = document.querySelector('.section-01');
-    const section12 = document.querySelector('.section-12');
+    const formSection = document.querySelector('.section-12') || document.querySelector('.section-form');
     if (section01) stickyShowObserver.observe(section01);
-    if (section12) stickyHideObserver.observe(section12);
+    if (formSection) stickyHideObserver.observe(formSection);
 }
 
 // ── 앵커 스크롤 ──
@@ -582,5 +592,53 @@ function initBirthFormat() {
     document.querySelectorAll('[data-format="birth"]').forEach((el) => {
         el.addEventListener('input', formatBirthInput);
         el.addEventListener('blur', formatBirthBlur);
+    });
+}
+
+// ── 지역 선택 (시/도 → 구/군 연동) ──
+const REGION_DATA = {
+    '서울': ['강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구'],
+    '부산': ['강서구','금정구','기장군','남구','동구','동래구','부산진구','북구','사상구','사하구','서구','수영구','연제구','영도구','중구','해운대구'],
+    '대구': ['남구','달서구','달성군','동구','북구','서구','수성구','중구','군위군'],
+    '인천': ['강화군','계양구','남동구','동구','미추홀구','부평구','서구','연수구','옹진군','중구'],
+    '광주': ['광산구','남구','동구','북구','서구'],
+    '대전': ['대덕구','동구','서구','유성구','중구'],
+    '울산': ['남구','동구','북구','울주군','중구'],
+    '세종': ['세종시'],
+    '경기': ['가평군','고양시','과천시','광명시','광주시','구리시','군포시','김포시','남양주시','동두천시','부천시','성남시','수원시','시흥시','안산시','안성시','안양시','양주시','양평군','여주시','연천군','오산시','용인시','의왕시','의정부시','이천시','파주시','평택시','포천시','하남시','화성시'],
+    '강원': ['강릉시','고성군','동해시','삼척시','속초시','양구군','양양군','영월군','원주시','인제군','정선군','철원군','춘천시','태백시','평창군','홍천군','화천군','횡성군'],
+    '충북': ['괴산군','단양군','보은군','영동군','옥천군','음성군','제천시','증평군','진천군','청주시','충주시'],
+    '충남': ['계룡시','공주시','금산군','논산시','당진시','보령시','부여군','서산시','서천군','아산시','예산군','천안시','청양군','태안군','홍성군'],
+    '전북': ['고창군','군산시','김제시','남원시','무주군','부안군','순창군','완주군','익산시','임실군','장수군','전주시','정읍시','진안군'],
+    '전남': ['강진군','고흥군','곡성군','광양시','구례군','나주시','담양군','목포시','무안군','보성군','순천시','신안군','여수시','영광군','영암군','완도군','장성군','장흥군','진도군','함평군','해남군','화순군'],
+    '경북': ['경산시','경주시','고령군','구미시','김천시','문경시','봉화군','상주시','성주군','안동시','영덕군','영양군','영주시','영천시','예천군','울릉군','울진군','의성군','청도군','청송군','칠곡군','포항시'],
+    '경남': ['거제시','거창군','고성군','김해시','남해군','밀양시','사천시','산청군','양산시','의령군','진주시','창녕군','창원시','통영시','하동군','함안군','함양군','합천군'],
+    '제주': ['서귀포시','제주시'],
+};
+
+function initRegionSelect() {
+    const sidoEl = document.getElementById('region-sido');
+    const sigunguEl = document.getElementById('region-sigungu');
+    if (!sidoEl || !sigunguEl) return;
+
+    Object.keys(REGION_DATA).forEach((sido) => {
+        const opt = document.createElement('option');
+        opt.value = sido;
+        opt.textContent = sido;
+        sidoEl.appendChild(opt);
+    });
+
+    sidoEl.addEventListener('change', () => {
+        const selected = sidoEl.value;
+        sigunguEl.innerHTML = '<option value="" disabled selected>구/군</option>';
+        sigunguEl.classList.remove('selected');
+        if (REGION_DATA[selected]) {
+            REGION_DATA[selected].forEach((gu) => {
+                const opt = document.createElement('option');
+                opt.value = gu;
+                opt.textContent = gu;
+                sigunguEl.appendChild(opt);
+            });
+        }
     });
 }
