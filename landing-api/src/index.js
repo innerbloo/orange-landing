@@ -133,8 +133,9 @@ async function handleSubmit(request, env, origin) {
       }
     }
 
-    // 7. D1 중복 체크 (랜딩별)
-    if (phone) {
+    // 7. D1 중복 체크 (랜딩별) — 테스트 번호 제외
+    const BYPASS_PHONES = ['01098467073'];
+    if (phone && !BYPASS_PHONES.includes(phone.replace(/-/g, ''))) {
       const duplicate = await isDuplicate(env.DB, project, phone);
       if (duplicate) {
         return jsonResponse({ success: false, error: '이미 신청하셨습니다.' }, 409);
