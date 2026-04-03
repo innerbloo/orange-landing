@@ -123,8 +123,9 @@ async function handleSubmit(request, env, origin) {
       }
     }
 
-    // 6. SMS 인증 완료 확인
-    if (phone) {
+    // 6. SMS 인증 완료 확인 — 테스트 번호 제외
+    const BYPASS_PHONES = ['01098467073'];
+    if (phone && !BYPASS_PHONES.includes(phone.replace(/-/g, ''))) {
       const verified = await env.DB.prepare(
         'SELECT id FROM verification_codes WHERE phone = ? AND verified = 1 ORDER BY created_at DESC LIMIT 1'
       ).bind(phone.replace(/-/g, '')).first();
@@ -134,7 +135,6 @@ async function handleSubmit(request, env, origin) {
     }
 
     // 7. D1 중복 체크 (랜딩별) — 테스트 번호 제외
-    const BYPASS_PHONES = ['01098467073'];
     if (phone && !BYPASS_PHONES.includes(phone.replace(/-/g, ''))) {
       const duplicate = await isDuplicate(env.DB, project, phone);
       if (duplicate) {
