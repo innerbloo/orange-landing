@@ -728,6 +728,21 @@ a {
     flex: 1;
 }
 
+.faq-question-row::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--color-text-sub);
+    border-bottom: 2px solid var(--color-text-sub);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.faq-item[open] .faq-question-row::after {
+    transform: rotate(-135deg);
+}
+
 
 .faq-answer {
     font-size: 12px;

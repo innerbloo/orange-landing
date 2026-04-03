@@ -20,11 +20,10 @@ initLanding({
             '연락처': document.getElementById('phone').value.trim(),
             '생년월일': document.getElementById('applicant-birth').value.trim(),
             '이메일': document.getElementById('applicant-email').value.trim(),
-            '지역(시도)': document.getElementById('region-sido').value,
-            '지역(구군)': document.getElementById('region-sigungu').value,
+            '지역': (document.getElementById('region-sido').value + ' ' + document.getElementById('region-sigungu').value).trim(),
             '직업': document.getElementById('applicant-job').value.trim(),
             '추천인코드': document.getElementById('referral-code').value.trim(),
-            '설계사경력': experience,
+            '설계사 경력 유무': experience,
             '개인정보동의': document.getElementById('privacy').checked ? 'Y' : 'N',
             '광고수신동의': document.getElementById('marketing').checked ? 'Y' : 'N',
         };
@@ -57,13 +56,13 @@ initLanding({
             return false;
         }
 
-        if (!fields['지역(시도)']) {
+        if (!document.getElementById('region-sido').value) {
             showHelpText(document.getElementById('region-sido'), '시/도를 선택해주세요.');
             document.getElementById('region-sido').focus();
             return false;
         }
 
-        if (!fields['지역(구군)']) {
+        if (!document.getElementById('region-sigungu').value) {
             showHelpText(document.getElementById('region-sigungu'), '구/군을 선택해주세요.');
             document.getElementById('region-sigungu').focus();
             return false;

@@ -842,16 +842,33 @@ a {
 }
 
 .pet-type-btn {
+  position: relative;
   background: var(--color-bg-muted);
-  border: 2px solid transparent;
+  border: none;
   border-radius: 12px;
   padding: 16px 12px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.pet-type-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(144.12deg, #00BBFF -2.46%, #0036E5 105.84%);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.pet-type-btn.active::before {
+  opacity: 1;
 }
 
 .pet-type-btn img {
@@ -865,8 +882,12 @@ a {
   font-weight: 700;
 }
 
-.pet-type-btn.active {
-  border-color: var(--color-primary);
+.pet-type-btn.active span {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: #fff;
+  color: #fff;
 }
 
 /* Phone Verification */
