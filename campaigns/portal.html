@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Landing Portal</title>
+<style>
+	* { margin: 0; padding: 0; box-sizing: border-box; }
+	body { font-family: -apple-system, 'Apple SD Gothic Neo', sans-serif; background: #f5f6f8; min-height: 100vh; padding: 40px 20px; }
+	.portal { max-width: 560px; margin: 0 auto; }
+	.portal-title { font-size: 20px; font-weight: 800; color: #222; margin-bottom: 6px; }
+	.portal-sub { font-size: 13px; color: #999; margin-bottom: 28px; }
+	.group { margin-bottom: 24px; }
+	.group-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; padding-left: 4px; }
+	.card-list { display: flex; flex-direction: column; gap: 6px; }
+	.card { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 10px; padding: 14px 16px; text-decoration: none; color: #222; transition: background 0.15s, transform 0.15s; }
+	.card:active { background: #f0f2f5; transform: scale(0.98); }
+	.card-info { display: flex; flex-direction: column; gap: 2px; }
+	.card-name { font-size: 14px; font-weight: 600; }
+	.card-url { font-size: 11px; color: #aaa; }
+	.card-arrow { font-size: 16px; color: #ccc; }
+	.footer { margin-top: 40px; text-align: center; font-size: 11px; color: #ccc; }
+</style>
+</head>
+<body>
+<div class="portal">
+	<h1 class="portal-title">Landing Portal</h1>
+	<p class="portal-sub">광고주별 랜딩페이지 목록</p>
+
+	<div class="group">
+		<div class="group-label">삼성화재</div>
+		<div class="card-list">
+			<a class="card" href="/ss-pet-insurance-a/">
+				<div class="card-info">
+					<span class="card-name">펫보험 A</span>
+					<span class="card-url">/ss-pet-insurance-a/</span>
+				</div>
+				<span class="card-arrow">›</span>
+			</a>
+			<a class="card" href="/ss-cancer-insurance-a/">
+				<div class="card-info">
+					<span class="card-name">암보험 A</span>
+					<span class="card-url">/ss-cancer-insurance-a/</span>
+				</div>
+				<span class="card-arrow">›</span>
+			</a>
+			<a class="card" href="/ss-njob-crew-a/">
+				<div class="card-info">
+					<span class="card-name">N잡크루 A</span>
+					<span class="card-url">/ss-njob-crew-a/</span>
+				</div>
+				<span class="card-arrow">›</span>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="footer">planetdb.co.kr</div>
+</body>
+</html>
