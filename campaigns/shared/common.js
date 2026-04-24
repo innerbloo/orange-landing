@@ -50,6 +50,7 @@ function initLanding(config) {
     initPhoneFormat();
     initBirthFormat();
     initRegionSelect();
+    initMissionFlow();
 }
 
 // ── SMS 인증 ──
@@ -202,16 +203,18 @@ function updateTimerDisplay(sec) {
 }
 
 // ── 동의 체크박스 ──
+// 미션 동의(.mission-agreement 내부)는 팝업으로만 제어하므로 agree-all에서 제외
 function initAgreement() {
+    const userItems = () => [...document.querySelectorAll('.agree-item')]
+        .filter(cb => !cb.closest('.mission-agreement'));
+
     document.getElementById('agree-all').addEventListener('change', (e) => {
-        document.querySelectorAll('.agree-item').forEach(cb => {
-            cb.checked = e.target.checked;
-        });
+        userItems().forEach(cb => { cb.checked = e.target.checked; });
     });
 
-    document.querySelectorAll('.agree-item').forEach(cb => {
+    userItems().forEach(cb => {
         cb.addEventListener('change', () => {
-            const allChecked = [...document.querySelectorAll('.agree-item')].every(c => c.checked);
+            const allChecked = userItems().every(c => c.checked);
             document.getElementById('agree-all').checked = allChecked;
         });
     });
@@ -258,9 +261,21 @@ function initFormSubmit() {
 
             if (result.success) {
                 localStorage.setItem(`submitted_${_config.project}_${phoneValue}`, 'true');
+
+                // 버즈빌 전환 스크립트 (미션 완료 전송)
+                // bz_tracking_id가 없으면 buzzvil-pixel.js가 자동으로 무시하므로 조건 검사 불필요
+                if (typeof window.bzq === 'function') {
+                    try {
+                        window.bzq('track', { action: 'bz_action_complete' });
+                    } catch (err) {
+                        console.warn('Buzzvil track failed:', err);
+                    }
+                }
+
                 alert('소중한 문의 감사합니다.\n빠른 시일 내에 연락드리겠습니다.');
                 form.reset();
                 resetVerification();
+                resetMissionGate();
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
                 submitBtn.disabled = true;
                 if (_config.onReset) _config.onReset();
@@ -642,4 +657,135 @@ function initRegionSelect() {
             });
         }
     });
+}
+
+// ── 미션 플로우 (-b 랜딩 전용) ──
+// index.html에 .mission-popup-overlay[data-mission-step="1|2"]와
+// .agreement-item.mission-agreement 요소가 있을 때만 동작
+function initMissionFlow() {
+    const popups = document.querySelectorAll('.mission-popup-overlay');
+    if (!popups.length) return;
+
+    const formSection = document.getElementById('form-section');
+    const missionCheckboxes = document.querySelectorAll('.mission-agreement input[type="checkbox"]');
+
+    // 초기 상태: 폼 락 + 미션 동의 체크박스 disabled
+    if (formSection) formSection.classList.add('form-locked');
+    missionCheckboxes.forEach((cb) => {
+        cb.disabled = true;
+        cb.checked = false;
+    });
+
+    // 폼 섹션이 뷰포트에 진입할 때마다 미완료 스텝 팝업 재오픈 (데드엔드 방지)
+    // 유저가 "아니오"를 눌러 떠났다가 다시 스크롤해 돌아오면 다시 팝업이 뜸
+    if (formSection) {
+        const missionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                if (isMissionCompleted()) return;
+                // 이미 어떤 팝업이 열려 있으면 중복 오픈 방지
+                if (document.querySelector('.mission-popup-overlay.active')) return;
+                const nextStep = getNextMissionStep();
+                if (nextStep) openMissionPopup(nextStep);
+            });
+        }, { threshold: 0.2 });
+        missionObserver.observe(formSection);
+    }
+
+    popups.forEach((popup) => {
+        const step = parseInt(popup.dataset.missionStep, 10);
+        const yesBtn = popup.querySelector('.mission-popup-btn.yes');
+        const noBtn = popup.querySelector('.mission-popup-btn.no');
+
+        if (yesBtn) {
+            yesBtn.addEventListener('click', () => {
+                // 해당 스텝의 미션 동의 체크박스 자동 체크 + 영구 고정
+                const targetCb = document.querySelector(`.mission-agreement[data-mission-step="${step}"] input[type="checkbox"]`);
+                if (targetCb) {
+                    targetCb.checked = true;
+                    targetCb.disabled = true;
+                    targetCb.closest('.mission-agreement').classList.add('completed');
+                }
+
+                closeMissionPopup(popup);
+
+                if (step === 1) {
+                    // 1번 통과 → 2번 팝업 열기
+                    setTimeout(() => openMissionPopup(2), 280);
+                } else if (step === 2) {
+                    // 2번 통과 → 폼 락 해제 + 폼으로 스크롤
+                    unlockForm();
+                    setTimeout(() => {
+                        if (formSection) formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }
+            });
+        }
+
+        if (noBtn) {
+            noBtn.addEventListener('click', () => {
+                closeMissionPopup(popup);
+                // 폼 락 유지 + 상단으로 이동. 다시 스크롤해서 폼 도달하면 observer가 재오픈
+                alert('미션에 동의하셔야 진행하실 수 있습니다.\n다시 시도하시려면 아래로 스크롤해주세요.');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    });
+}
+
+function openMissionPopup(step) {
+    const popup = document.querySelector(`.mission-popup-overlay[data-mission-step="${step}"]`);
+    if (!popup) return;
+    popup.classList.add('active');
+    popup.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMissionPopup(popup) {
+    popup.classList.remove('active');
+    popup.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+function unlockForm() {
+    const formSection = document.getElementById('form-section');
+    if (formSection) formSection.classList.remove('form-locked');
+}
+
+// 폼 제출 성공 후 미션 게이트 완전 재설정
+// form.reset()이 미션 체크박스를 unchecked로 돌려놓으므로 disabled 재적용 + 폼 락 복구
+// 폼 섹션이 이미 뷰포트에 있을 수 있으므로 observer 대신 페이지 상단으로 스크롤 이동
+// (다시 스크롤 내려 폼에 진입하면 observer가 재발화)
+function resetMissionGate() {
+    const missionCheckboxes = document.querySelectorAll('.mission-agreement input[type="checkbox"]');
+    if (!missionCheckboxes.length) return;
+
+    missionCheckboxes.forEach((cb) => {
+        cb.checked = false;
+        cb.disabled = true;
+        cb.closest('.mission-agreement')?.classList.remove('completed');
+    });
+
+    const formSection = document.getElementById('form-section');
+    if (formSection) formSection.classList.add('form-locked');
+
+    // 페이지 상단으로 이동해 observer가 다음 진입 시 재발화하도록 준비
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function isMissionCompleted() {
+    const cbs = document.querySelectorAll('.mission-agreement input[type="checkbox"]');
+    if (!cbs.length) return true;
+    return [...cbs].every((cb) => cb.checked);
+}
+
+function getNextMissionStep() {
+    const cbs = document.querySelectorAll('.mission-agreement input[type="checkbox"]');
+    for (const cb of cbs) {
+        if (!cb.checked) {
+            const step = cb.closest('.mission-agreement')?.dataset.missionStep;
+            if (step) return parseInt(step, 10);
+        }
+    }
+    return null;
 }

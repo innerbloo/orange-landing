@@ -96,6 +96,18 @@ CREATE UNIQUE INDEX idx_project_phone ON submissions (project, phone);
 - 각 랜딩의 `styles.css`에서 하드코딩 색상 대신 CSS 변수 사용
 - 새 광고주 추가 시: 접두사 + 공통 CSS 파일 생성
 
+## 랜딩 타입 변형 (`-a`, `-b`)
+
+같은 상품/광고주 내에서 A/B 테스트나 유입 채널별 랜딩을 구분하기 위해 접미사 사용.
+
+| 접미사 | 타입 | 특징 |
+|--------|------|------|
+| `-a` | 일반형 | 기본 폼 제출 흐름 |
+| `-b` | 미션형 | 버즈빌 CPA 연동. 진입 시 미션 팝업 2개 통과 후 폼 락 해제, 제출 시 버즈빌 전환 포스트백 전송 |
+
+- `-b` 랜딩은 별도의 구글시트 탭(project + tabId)을 사용하며, sheetId는 같은 광고주 내에서 재사용
+- A/B 버전은 동일한 상품의 데이터 분리를 위해 반드시 **서로 다른 project명**을 사용
+
 ## 공통 리소스 분리 구조
 
 ### 공통 CSS (`shared/common.css`) — 모든 랜딩에서 로드
@@ -310,6 +322,52 @@ initLanding({
 - 그라데이션 텍스트 (`.gradient-text`)
 - 헤더 + 히어로 섹션 (`.header` ~ `.hero-*`)
 - CTA 버튼 (`.cta-button`)
+
+## 버즈빌 CPA 연동 (`-b` 미션형 랜딩 전용)
+
+### 연동 방식
+JavaScript 픽셀 연동. 버즈빌 광고 클릭 → URL `?bz_tracking_id=xxx` → `localStorage`에 저장 → 전환 완료 시 `window.bzq("track", ...)` 호출.
+
+### 초기화 스크립트 (각 `-b` 랜딩 `index.html` `<head>`)
+```html
+<!-- Buzzvil Pixel Code : 연동 완료 후 삭제 및 이동 불가 -->
+<!-- TODO: 버즈빌 실제 연동 ID 받으면 99999를 교체 (정수, 따옴표 X) -->
+<script async src="https://buzz-js.buzzvil.com/buzzvil-pixel-sdk/buzzvil-pixel.js"></script>
+<script>
+    window.bzDataLayer = [];
+    function bzq() { window.bzDataLayer.push(arguments); }
+    bzq("init", 99999);
+</script>
+<!-- Buzzvil Pixel Code End -->
+```
+
+### 전환 스크립트
+`shared/common.js`의 폼 제출 성공 시점에 `window.bzq("track", { action: "bz_action_complete" })` 자동 호출됨. `bz_tracking_id`가 없으면 버즈빌 픽셀 SDK가 무시하므로 광고 미클릭 유저에 대한 과금 우려 없음.
+
+### 연동 ID 교체 필요
+현재 임시로 `99999`가 들어있음. 버즈빌에서 실제 연동 ID(정수)를 받으면 각 `-b` 랜딩의 `index.html`에서 `bzq("init", 99999);`의 `99999`를 교체. **따옴표 없이 정수**로 작성.
+
+## 미션형(`-b`) 랜딩 구현 규칙
+
+### 미션 플로우
+1. 페이지 진입 → 폼 섹션에 `form-locked` 클래스 자동 추가 (폼 입력 차단 + 반투명 오버레이)
+2. 유저가 스크롤하여 **폼 섹션(`#form-section`)이 뷰포트에 진입**하면 미션 팝업 1 자동 노출 (블러 배경, 한 번만)
+3. "예" → 약관 섹션의 `mission-agreement[data-mission-step="1"]` 체크박스 자동 체크(해제 불가) + 팝업 2 노출
+4. "예" → 동일하게 체크박스 2번 자동 체크 + 폼 락 해제 + 폼으로 스크롤
+5. "아니오" → 최상단으로 이동 (폼 락 유지)
+6. 유저가 이름/연락처/SMS 인증/나머지 필드 입력 → "미션완료" 버튼 클릭
+7. 폼 제출 성공 시 D1 + 구글시트 저장 + 버즈빌 전환 포스트백 전송
+
+### 필수 마크업
+- 약관 섹션에 `mission-agreement` 동의 항목 2개 (`data-mission-step="1|2"`, input은 `disabled`로 시작)
+- `</body>` 직전에 미션 팝업 2개 (`.mission-popup-overlay[data-mission-step="1|2"]`)
+- 제출 버튼 텍스트는 `미션완료`로 변경
+- `buildFields()`에 `미션동의1`/`미션동의2` 필드 추가, `validateFields()`에서 둘 다 'Y' 아니면 차단
+- 폼 섹션은 반드시 `id="form-section"` 사용 (IntersectionObserver 대상)
+
+### 공통 스타일/스크립트 (shared)
+- `shared/common.css`: `.mission-popup-overlay`, `.mission-popup`, `.form-locked`, `.mission-agreement` 스타일
+- `shared/common.js`: `initMissionFlow()` 함수가 `initLanding()`에서 자동 호출. 팝업이 없으면 아무 동작 안 함(일반형 랜딩 영향 없음)
 
 ## 무료 티어 한도
 
