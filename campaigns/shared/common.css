@@ -120,15 +120,15 @@
 
 .mission-popup {
     width: 88%;
-    max-width: 360px;
+    max-width: 320px;
     background: #fff;
     border-radius: 16px;
-    padding: 28px 20px 20px;
+    padding: 28px 24px 24px;
     text-align: center;
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
 
 .mission-popup-overlay.active .mission-popup {
@@ -136,34 +136,36 @@
     opacity: 1;
 }
 
-.mission-popup-step {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--color-primary, #0036e5);
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
+.mission-popup-badge {
+    width: 24px;
+    height: 25px;
+    margin: 0 auto 14px;
+    display: block;
 }
 
 .mission-popup-title {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 400;
     color: #191f28;
-    line-height: 1.5;
+    line-height: 1.6;
     margin-bottom: 22px;
     word-break: keep-all;
-    white-space: pre-line;
+}
+
+.mission-popup-title strong {
+    font-weight: 700;
 }
 
 .mission-popup-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
 }
 
 .mission-popup-btn {
     height: 46px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
@@ -181,8 +183,42 @@
 }
 
 .mission-popup-btn.no {
-    background: #f1f3f5;
-    color: #6b7684;
+    background: #b0b8c1;
+    color: #fff;
+}
+
+/* 미션 완료 모달 (단일 확인 버튼) */
+.mission-popup--success .mission-popup-actions {
+    grid-template-columns: 1fr;
+}
+
+.mission-popup-btn.confirm {
+    background: var(--color-primary, #0036e5);
+    color: #fff;
+}
+
+/* 성공/실패 아이콘 (디자이너 export SVG 사용 — 느낌표 포함) */
+.mission-popup-success-icon,
+.mission-popup-fail-icon {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 14px;
+}
+
+.mission-popup-success-icon svg,
+.mission-popup-fail-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.mission-popup--fail .mission-popup-actions {
+    grid-template-columns: 1fr;
+}
+
+.mission-popup-btn.fail-confirm {
+    background: var(--color-primary, #0036e5);
+    color: #fff;
 }
 
 /* ───────── 폼 락 (미션 통과 전) ───────── */

@@ -546,13 +546,11 @@
   <!-- 미션 팝업 1 -->
   <div class="mission-popup-overlay" data-mission-step="1" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mission-popup-1-title">
     <div class="mission-popup">
-      <div class="mission-popup-step">MISSION 1/2</div>
-      <p class="mission-popup-title" id="mission-popup-1-title">미션에 반드시 성함과 연락처
-기재가 필요합니다.
-가능하신가요?</p>
+      <img src="assets/icon_verified-badge.webp" alt="" class="mission-popup-badge" width="24" height="25">
+      <p class="mission-popup-title" id="mission-popup-1-title">반드시 <strong>성함과 연락처 기재</strong>가 <strong>필요</strong>합니다.<br>가능하신가요?</p>
       <div class="mission-popup-actions">
-        <button type="button" class="mission-popup-btn no">아니오</button>
-        <button type="button" class="mission-popup-btn yes">예</button>
+        <button type="button" class="mission-popup-btn yes">Yes</button>
+        <button type="button" class="mission-popup-btn no">No</button>
       </div>
     </div>
   </div>
@@ -560,13 +558,55 @@
   <!-- 미션 팝업 2 -->
   <div class="mission-popup-overlay" data-mission-step="2" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mission-popup-2-title">
     <div class="mission-popup">
-      <div class="mission-popup-step">MISSION 2/2</div>
-      <p class="mission-popup-title" id="mission-popup-2-title">정보를 남긴 후 24시간 이내에
-상품 관련 전화 연락이 갑니다.
-통화 가능하신가요?</p>
+      <img src="assets/icon_verified-badge.webp" alt="" class="mission-popup-badge" width="24" height="25">
+      <p class="mission-popup-title" id="mission-popup-2-title">정보를 남긴 후 <strong>24시간 이내</strong>에 상품 관련 <strong>전화 연락</strong>이 갑니다.<br>통화 가능하신가요?</p>
       <div class="mission-popup-actions">
-        <button type="button" class="mission-popup-btn no">아니오</button>
-        <button type="button" class="mission-popup-btn yes">예</button>
+        <button type="button" class="mission-popup-btn yes">Yes</button>
+        <button type="button" class="mission-popup-btn no">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 미션 실패 팝업 -->
+  <div class="mission-popup-overlay" data-mission-step="fail" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mission-popup-fail-title">
+    <div class="mission-popup mission-popup--fail">
+      <div class="mission-popup-fail-icon" aria-hidden="true">
+        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="13" cy="12" r="12" fill="url(#paint0_linear_188_52)"/>
+          <path d="M13.4844 14.6172H11.4922L11.2812 6.6875H13.7031L13.4844 14.6172ZM12.4922 18.1406C12.2578 18.1406 12.0391 18.0807 11.8359 17.9609C11.6328 17.8359 11.4714 17.6745 11.3516 17.4766C11.237 17.2734 11.1797 17.0547 11.1797 16.8203C11.1797 16.5911 11.237 16.3776 11.3516 16.1797C11.4714 15.9766 11.6328 15.8177 11.8359 15.7031C12.0391 15.5885 12.2578 15.5312 12.4922 15.5312C12.7214 15.5312 12.9349 15.5885 13.1328 15.7031C13.3359 15.8177 13.4974 15.9766 13.6172 16.1797C13.7422 16.3776 13.8047 16.5911 13.8047 16.8203C13.8047 17.0547 13.7422 17.2734 13.6172 17.4766C13.4974 17.6745 13.3359 17.8359 13.1328 17.9609C12.9349 18.0807 12.7214 18.1406 12.4922 18.1406Z" fill="white"/>
+          <defs>
+            <linearGradient id="paint0_linear_188_52" x1="6.69649" y1="-22.6742" x2="23.004" y2="-21.7705" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF6600"/>
+              <stop offset="1" stop-color="#E50000"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="mission-popup-title" id="mission-popup-fail-title">미션 실패!<br>정보를 받을 수 없습니다.</p>
+      <div class="mission-popup-actions">
+        <button type="button" class="mission-popup-btn fail-confirm">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 미션 완료 팝업 -->
+  <div class="mission-popup-overlay" data-mission-step="success" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mission-popup-success-title">
+    <div class="mission-popup mission-popup--success">
+      <div class="mission-popup-success-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="12" fill="url(#paint0_linear_188_54)"/>
+          <path d="M12.9844 14.6172H10.9922L10.7812 6.6875H13.2031L12.9844 14.6172ZM11.9922 18.1406C11.7578 18.1406 11.5391 18.0807 11.3359 17.9609C11.1328 17.8359 10.9714 17.6745 10.8516 17.4766C10.737 17.2734 10.6797 17.0547 10.6797 16.8203C10.6797 16.5911 10.737 16.3776 10.8516 16.1797C10.9714 15.9766 11.1328 15.8177 11.3359 15.7031C11.5391 15.5885 11.7578 15.5312 11.9922 15.5312C12.2214 15.5312 12.4349 15.5885 12.6328 15.7031C12.8359 15.8177 12.9974 15.9766 13.1172 16.1797C13.2422 16.3776 13.3047 16.5911 13.3047 16.8203C13.3047 17.0547 13.2422 17.2734 13.1172 17.4766C12.9974 17.6745 12.8359 17.8359 12.6328 17.9609C12.4349 18.0807 12.2214 18.1406 11.9922 18.1406Z" fill="white"/>
+          <defs>
+            <linearGradient id="paint0_linear_188_54" x1="5.69649" y1="-22.6742" x2="22.004" y2="-21.7705" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#00BBFF"/>
+              <stop offset="1" stop-color="#0036E5"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="mission-popup-title" id="mission-popup-success-title">미션이 완료되었어요!</p>
+      <div class="mission-popup-actions">
+        <button type="button" class="mission-popup-btn confirm">확인</button>
       </div>
     </div>
   </div>

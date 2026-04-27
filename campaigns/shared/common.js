@@ -239,7 +239,7 @@ function initFormSubmit() {
         const phoneValue = phoneInput.value.replace(/-/g, '');
         const BYPASS_PHONES = ['01098467073'];
         if (!BYPASS_PHONES.includes(phoneValue) && localStorage.getItem(`submitted_${_config.project}_${phoneValue}`)) {
-            alert('이미 신청하셨습니다.');
+            if (!showFailPopup()) alert('이미 신청하셨습니다.');
             return;
         }
 
@@ -253,7 +253,7 @@ function initFormSubmit() {
             });
 
             if (!response.ok) {
-                alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                if (!showFailPopup()) alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
                 return;
             }
 
@@ -272,19 +272,18 @@ function initFormSubmit() {
                     }
                 }
 
-                alert('소중한 문의 감사합니다.\n빠른 시일 내에 연락드리겠습니다.');
                 form.reset();
                 resetVerification();
-                resetMissionGate();
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
                 submitBtn.disabled = true;
                 if (_config.onReset) _config.onReset();
+                showSuccessPopup();
             } else {
-                alert(result.error || '오류가 발생했습니다.');
+                if (!showFailPopup()) alert(result.error || '오류가 발생했습니다.');
             }
         } catch (error) {
             console.error('제출 오류:', error);
-            alert('인터넷 연결을 확인해주세요.');
+            if (!showFailPopup()) alert('인터넷 연결을 확인해주세요.');
         } finally {
             setLoadingState(false);
         }
@@ -692,7 +691,32 @@ function initMissionFlow() {
         missionObserver.observe(formSection);
     }
 
+    // 성공 모달 확인 버튼: 닫기 + 미션 게이트 리셋 + 상단 이동
+    const successPopup = document.querySelector('.mission-popup-overlay[data-mission-step="success"]');
+    if (successPopup) {
+        const confirmBtn = successPopup.querySelector('.mission-popup-btn.confirm');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', () => {
+                closeMissionPopup(successPopup);
+                resetMissionGate();
+            });
+        }
+    }
+
+    // 실패 모달 확인 버튼: 닫기만 (미션 상태/폼 입력값은 유지하여 재시도 가능)
+    const failPopup = document.querySelector('.mission-popup-overlay[data-mission-step="fail"]');
+    if (failPopup) {
+        const failConfirmBtn = failPopup.querySelector('.mission-popup-btn.fail-confirm');
+        if (failConfirmBtn) {
+            failConfirmBtn.addEventListener('click', () => {
+                closeMissionPopup(failPopup);
+            });
+        }
+    }
+
     popups.forEach((popup) => {
+        // success/fail 팝업은 별도 핸들러로 처리 (위에서)
+        if (popup.dataset.missionStep === 'success' || popup.dataset.missionStep === 'fail') return;
         const step = parseInt(popup.dataset.missionStep, 10);
         const yesBtn = popup.querySelector('.mission-popup-btn.yes');
         const noBtn = popup.querySelector('.mission-popup-btn.no');
@@ -771,6 +795,26 @@ function resetMissionGate() {
 
     // 페이지 상단으로 이동해 observer가 다음 진입 시 재발화하도록 준비
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 미션형(-b) 랜딩에 .mission-popup-overlay[data-mission-step="success"]가 있으면
+// 미션 완료 모달을 띄우고, 없으면 기존 alert로 폴백 (-a 일반 랜딩 호환)
+function showSuccessPopup() {
+    const successPopup = document.querySelector('.mission-popup-overlay[data-mission-step="success"]');
+    if (successPopup) {
+        openMissionPopup('success');
+    } else {
+        alert('소중한 문의 감사합니다.\n빠른 시일 내에 연락드리겠습니다.');
+        resetMissionGate();
+    }
+}
+
+// 미션형(-b) 랜딩 전용 실패 모달. 없으면 false 반환하여 호출부가 alert로 폴백 가능
+function showFailPopup() {
+    const failPopup = document.querySelector('.mission-popup-overlay[data-mission-step="fail"]');
+    if (!failPopup) return false;
+    openMissionPopup('fail');
+    return true;
 }
 
 function isMissionCompleted() {

@@ -24,8 +24,8 @@ initLanding({
             '직업': document.getElementById('applicant-job').value.trim(),
             '추천인코드': document.getElementById('referral-code').value.trim(),
             '설계사 경력 유무': experience,
-            '미션동의1': document.getElementById('mission-1').checked ? 'Y' : 'N',
-            '미션동의2': document.getElementById('mission-2').checked ? 'Y' : 'N',
+            '성함과 연락처 기재 동의': document.getElementById('mission-1').checked ? 'Y' : 'N',
+            '24시간 내 상품 관련 통화 동의': document.getElementById('mission-2').checked ? 'Y' : 'N',
             '개인정보동의': document.getElementById('privacy').checked ? 'Y' : 'N',
             '광고수신동의': document.getElementById('marketing').checked ? 'Y' : 'N',
         };
@@ -76,7 +76,7 @@ initLanding({
             return false;
         }
 
-        if (fields['미션동의1'] !== 'Y' || fields['미션동의2'] !== 'Y') {
+        if (fields['성함과 연락처 기재 동의'] !== 'Y' || fields['24시간 내 상품 관련 통화 동의'] !== 'Y') {
             alert('미션을 먼저 완료해주세요.');
             return false;
         }
