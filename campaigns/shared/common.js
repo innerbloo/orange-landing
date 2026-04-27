@@ -264,7 +264,10 @@ function initFormSubmit() {
 
                 // 버즈빌 전환 스크립트 (미션 완료 전송)
                 // bz_tracking_id가 없으면 buzzvil-pixel.js가 자동으로 무시하므로 조건 검사 불필요
-                if (typeof window.bzq === 'function') {
+                const isBuzzvilUser = !!localStorage.getItem('BuzzAd');
+                const buzzvilSdkReady = typeof window.bzq === 'function';
+
+                if (buzzvilSdkReady) {
                     try {
                         window.bzq('track', { action: 'bz_action_complete' });
                     } catch (err) {
@@ -277,7 +280,19 @@ function initFormSubmit() {
                 document.querySelectorAll('.form-group select').forEach(s => s.classList.remove('selected'));
                 submitBtn.disabled = true;
                 if (_config.onReset) _config.onReset();
-                showSuccessPopup();
+
+                // 버즈빌 유입 유저인데 SDK가 차단되어 있으면 리워드 지급에 문제가 있을 수 있음을 안내
+                // DB는 이미 저장됐고 중복 마크도 찍혀 재제출 불가 → "다시 시도" 표현 사용 안 함
+                // 확인 시 미션 게이트도 함께 리셋 (성공 케이스와 동일하게 폼/게이트 정리)
+                // 그 외에는 성공 모달 (일반 유입 + 광고 유입 정상 케이스)
+                if (isBuzzvilUser && !buzzvilSdkReady) {
+                    showFailPopup(
+                        '정보는 정상 접수되었으나<br>리워드 처리에 문제가 있을 수 있어요.',
+                        { resetGateOnConfirm: true }
+                    );
+                } else {
+                    showSuccessPopup();
+                }
             } else {
                 if (!showFailPopup()) alert(result.error || '오류가 발생했습니다.');
             }
@@ -703,13 +718,19 @@ function initMissionFlow() {
         }
     }
 
-    // 실패 모달 확인 버튼: 닫기만 (미션 상태/폼 입력값은 유지하여 재시도 가능)
+    // 실패 모달 확인 버튼: 기본은 닫기만 (재시도 가능)
+    // showFailPopup에 resetGateOnConfirm: true로 호출된 경우(DB 성공+광고차단)는 게이트도 리셋
     const failPopup = document.querySelector('.mission-popup-overlay[data-mission-step="fail"]');
     if (failPopup) {
         const failConfirmBtn = failPopup.querySelector('.mission-popup-btn.fail-confirm');
         if (failConfirmBtn) {
             failConfirmBtn.addEventListener('click', () => {
+                const shouldReset = failPopup.dataset.resetOnConfirm === 'true';
                 closeMissionPopup(failPopup);
+                if (shouldReset) {
+                    failPopup.dataset.resetOnConfirm = '';
+                    resetMissionGate();
+                }
             });
         }
     }
@@ -750,7 +771,11 @@ function initMissionFlow() {
             noBtn.addEventListener('click', () => {
                 closeMissionPopup(popup);
                 // 폼 락 유지 + 상단으로 이동. 다시 스크롤해서 폼 도달하면 observer가 재오픈
-                alert('미션에 동의하셔야 진행하실 수 있습니다.\n다시 시도하시려면 아래로 스크롤해주세요.');
+                // 미션 거절 전용 안내 문구를 실패 모달 디자인으로 표시
+                const declineMsg = '미션에 동의하셔야 진행하실 수 있습니다.<br>다시 시도하시려면 아래로 스크롤해주세요.';
+                if (!showFailPopup(declineMsg)) {
+                    alert('미션에 동의하셔야 진행하실 수 있습니다.\n다시 시도하시려면 아래로 스크롤해주세요.');
+                }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
@@ -810,9 +835,17 @@ function showSuccessPopup() {
 }
 
 // 미션형(-b) 랜딩 전용 실패 모달. 없으면 false 반환하여 호출부가 alert로 폴백 가능
-function showFailPopup() {
+// message 인자 생략 시 기본 문구('미션 실패! 정보를 받을 수 없습니다.') 사용
+// resetGateOnConfirm: true면 확인 버튼 클릭 시 미션 게이트도 리셋 (DB 성공 + 광고차단 같은 케이스)
+const DEFAULT_FAIL_MESSAGE = '미션 실패!<br>정보를 받을 수 없습니다.';
+function showFailPopup(message, options) {
     const failPopup = document.querySelector('.mission-popup-overlay[data-mission-step="fail"]');
     if (!failPopup) return false;
+    const titleEl = failPopup.querySelector('.mission-popup-title');
+    if (titleEl) titleEl.innerHTML = message || DEFAULT_FAIL_MESSAGE;
+    // 다음 확인 클릭 시 게이트 리셋 여부 표시 (data-attr로 핸들러에 전달)
+    const shouldReset = !!(options && options.resetGateOnConfirm);
+    failPopup.dataset.resetOnConfirm = shouldReset ? 'true' : '';
     openMissionPopup('fail');
     return true;
 }
